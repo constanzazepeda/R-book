@@ -1,0 +1,10 @@
+about
+vectores-matrices-listas-y-data-frames
+importación-de-datos
+importación-de-datos-1
+gráficos-estáticos
+gráficos-dinámicos
+mapas
+modelo-de-regresión-lineal
+modelos-de-probabilidad-lineal-probit-y-logit
+modelos-de-probabilidad-lineal-probit-y-logit-1
