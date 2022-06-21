@@ -7,3 +7,4 @@ mapas
 modelo-de-regresión-lineal
 modelos-de-probabilidad-lineal-probit-y-logit
 modelos-de-probabilidad-lineal-probit-y-logit-1
+url-your-book-url-like-httpsbookdown.orgyihuibookdown
