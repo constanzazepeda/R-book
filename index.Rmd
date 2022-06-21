@@ -1,0 +1,14 @@
+--- 
+title: "Guía rápida para aprender R"
+author: "Constanza Zepeda"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+# cover-image: path to the social sharing image like images/cover.jpg
+description: "Este libro es una recopilación de ejercicios para familiarizarse rápidamente con R. Asocia sus contenidos a temas de finanzas y economía, pero puede fácilmente ser utilizado por profesionales de distintas áreas para entender el manejo del programa. El objetivo de este libro es acercar la programación a profesionales que aun no están familiarizados con R, y que puedan utilizar este material como apoyo para resolver dudas e inquietudes.\n El libro aun está en progreso de edición. Por mientras, espero que les sirva :)"
+
+
+link-citations: yes
+---

@@ -1,0 +1,406 @@
+# Gráficos estáticos
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+
+
+```{r}
+library(dplyr)
+library(forcats)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(ggfittext)
+library(treemapify)
+options(scipen=999)
+
+wbData3 <- readr::read_rds("datos/wbData3_final.rds")
+
+```
+
+## P1 Grafico de lineas {-}
+
+Grafique la evolución de la expectativa de vida al nacer para Chile, Japón y Estados Unidos en el período 1960-2020 usando un gráfico de líneas.
+
+```{r}
+# aesthetic
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, col = country)) +
+  geom_line()
+```
+
+**Ejercicio 1**: Incluya el layer theme_classic() ¿Qué obtiene?
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, color = country)) +
+  geom_line() +
+  theme_classic()
+```
+
+**Ejercicio 2**: Reemplace colour = country por linetype = country ¿Qué obtiene?
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, linetype = country)) +
+  geom_line() +
+  theme_minimal()
+```
+
+**Ejercicio 3**: Use otros themes que incluye el paquete ggthemes ¿Qué cambios observa?
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, color = country)) +
+  geom_line(size = 1) +
+  theme_wsj()
+```
+
+
+**Ejercicio 4**: ¿Cómo incluir tus propios colores para la línea que representa cada país? (Ayuda: ver scale_colour_manual())
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, color = country)) +
+  geom_line(size=1) +
+  scale_x_continuous(breaks = seq(from = 1960, to = 2020, by = 10)) +
+  labs(title = "Expectativa de vida al nacer",
+       subtitle = "1960-2020",
+       caption = paste0("Fuente: Elaboración propia en base a","\n",
+                        "World Development Indicators."),
+       x = "Año",
+       y = "Expectativa de vida al nacer (años)") +
+  scale_colour_manual(name = NULL,
+                      values = c(Chile = "#1b9e77",
+                                 Japan = "#d95f02",
+                                 'United States' = "#7570b3"),
+                      labels = c("Chile", "Japón", "Estados Unidos")) +
+  theme_tufte()
+```
+
+**Ejercicio 5**: ¿Cómo definir tus propias líneas para representar a cada país? (Ayuda: ver scale_linetype_manual())
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, linetype = country)) +
+  geom_line(size=1) +
+  scale_x_continuous(breaks = seq(1960, 2020,10)) +
+  labs(title = "Expectativa de vida al nacer",
+       subtitle = "1960-2020",
+       caption = "Fuente: Elaboración propia en base a WDI",
+       x = "Año",
+       y = "Expectativa de vida al nacer (años)") +
+  scale_linetype_manual(name="",
+                        values = c("dotted","twodash","solid"),
+                        labels = c("Chile", "Japón", "Estados Unidos")) +
+  theme_tufte()
+
+```
+
+**Ejercicio 6**: ¿Cómo se puede personalizar un gráfico? (Ayuda: ver theme())
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, color = country)) +
+  geom_line(size=1) +
+  scale_x_continuous(breaks = seq(1960, 2020,10)) +
+  labs(title = "Expectativa de vida al nacer",
+       subtitle = "1960-2020",
+       caption = paste("Fuente: Elaboración propia en base a WDI"),
+       x = "Año",
+       y = "Expectativa de vida al nacer (años)") +
+  scale_colour_manual(name = "",
+                      values = c(Chile = "#1b9e77",
+                                 Japan = "#d95f02",
+                                 'United States' = "#7570b3"),
+                      labels = c("Chile", "Japón", "Estados Unidos"))
+
+```
+
+**Ejercicio 7**: Usando un rectángulo, marque en el gráfico la década de los noventa.
+
+```{r}
+wbData3 %>% filter(country %in% c("Chile", "Japan", "United States")) %>%
+  ggplot(aes(x = year, y = life_expectancy, color = country)) +
+  annotate("rect",
+           xmin = 1990,
+           xmax = 2000,
+           ymin = -Inf,
+           ymax = Inf,
+           fill = "#dba0a0", alpha = 0.8) +
+  geom_line(size=1) +
+  scale_x_continuous(breaks = seq(1960, 2020,10)) +
+  labs(title = "Expectativa de vida al nacer",
+       subtitle = "1960-2020",
+       caption = paste("Fuente: Elaboración propia en base a WDI"),
+       x = "Año",
+       y = "Expectativa de vida al nacer (años)") +
+  scale_colour_manual(name = "",
+                      values = c(Chile = "#1b9e77",
+                                 Japan = "#d95f02",
+                                 'United States' = "#7570b3"),
+                      labels = c("Chile", "Japón", "Estados Unidos"))
+
+```
+
+## P2 Gráfico de barras {-}
+
+Construya el siguiente gráfico de barras que muestra el número de países en cada una de las regiones el año 2018.
+
+```{r}
+wbData3 %>% filter(year == 2018) %>%
+  ggplot(aes(x = region)) +
+  geom_bar(fill = "#31a377") +
+  coord_flip()
+
+wbData3 %>% filter(year == 2018) %>%
+  ggplot(aes(x = fct_rev(fct_infreq(as_factor(region))))) +
+  geom_bar(fill = "#31a377") +
+  scale_y_continuous(limits = c(0,65), expand = c(0,0)) +
+  labs(title = "Número de países por región, 2018",
+       x = NULL,
+       y = NULL) +
+  geom_text(aes(label= ..count..), stat = "count", hjust = -0.4) +
+  coord_flip() +
+  theme(rect = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
+```
+
+
+## P3 Gráfico de torta {-}
+
+Usando sólo información acerca de los diez países con mayor población el año 2019, construya un gráfico de torta y un treemap para representar el porcentaje de la población que representa cada uno de estos países.
+
+```{r}
+wbData3 %>% filter(year == 2019) %>%
+  slice_max(population, n = 10) %>%
+  mutate(prop = round(100*population/sum(population),1)) %>%
+  select(country, population, prop) %>%
+  ggplot(aes(x= 1, y = prop, fill = country)) +
+  geom_bar(stat = "identity", color = "white") +
+  coord_polar(theta = 'y') +
+  theme_void()
+
+# treemap
+wbData3 %>% filter(year == 2019) %>%
+  slice_max(population, n = 10) %>%
+  mutate(prop = round(100*population/sum(population),1)) %>%
+  select(country, population, prop) %>%
+  ggplot(aes(area= prop, fill = country, label = country)) +
+  geom_treemap(show.legend = FALSE, color = "#FFFFFF") +
+  geom_treemap_text(place = "topleft", max.size = 10, padding.y = grid::unit(2, "mm"),
+                    grow = TRUE, colour = "white") +
+  scale_x_continuous(limits = c(0,1)) +
+  scale_y_continuous(limits = c(0,1)) +
+  annotate(geom = "text", x = 0.58, y = 0.01, label = "32%", size = 6, color = "#FFFFFF") +
+  annotate(geom = "text", x = 0.58, y = 0.58, label = "31%", size = 6, color = "#FFFFFF") +
+  theme(axis.title =element_blank(),
+        axis.text =element_blank(),
+        axis.ticks =element_blank())
+```
+
+## P4 Gráfico de barras {-}
+
+Construya el siguiente gráfico de barras que muestra los 10 países con el mayor PIB per cápita el 2019.
+
+```{r}
+wbData3 %>% filter(year == 2019) %>% slice_max(gdppc, n = 10) %>%
+  ggplot(aes(x = fct_reorder(as_factor(country), gdppc), y = gdppc,
+             label = paste("USD", round(gdppc,0)))) +
+  geom_col(fill = "#013e63") +
+  scale_y_continuous(limits = c(0,140000), expand = c(0,0)) +
+  labs(title = "Diez países con el mayor PIB per cápita, 2019",
+       caption = paste("Fuente: Elaboración propia en base a", "\n",
+                       "World Development Indicators"),
+       x = NULL,
+       y = NULL) +
+  geom_bar_text(position = "stack", reflow = TRUE, size = 9) +
+  coord_flip() +
+  theme(rect = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
+
+wbData3 %>% filter(year == 2019) %>% slice_max(gdppc, n = 10) %>%
+  ggplot(aes(x = fct_reorder(as_factor(country), gdppc), y = gdppc,
+             label = paste("USD", round(gdppc,0)))) +
+  geom_col(aes(fill = region)) +
+  scale_y_continuous(limits = c(0,140000), expand = c(0,0)) +
+  scale_fill_brewer(name = NULL,
+                    guide = guide_legend(nrow = 2),
+                    palette = "Set2") +
+  labs(title = "Diez países con el mayor PIB per cápita, 2019",
+       caption = paste("Fuente: Elaboración propia en base a", "\n",
+                       "World Development Indicators"),
+       x = NULL,
+       y = NULL) +
+  geom_bar_text(position = "stack", reflow = TRUE, size = 9) +
+  coord_flip() +
+  theme(rect = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position= "top")
+
+wbData3 %>% filter(year == 2019) %>% slice_max(gdppc, n = 10) %>%
+  mutate(highlight = case_when(
+    region == "Este Asiático y Pacífico" ~ "Este Asiático y Pacífico",
+    region == "Medio Oriente y Norte de Africa" ~ "Medio Oriente y Norte de Africa",
+    TRUE ~ "Otra región")
+  ) %>%
+  ggplot(aes(x = fct_reorder(as_factor(country), gdppc), y = gdppc,
+             label = paste("USD", round(gdppc,0)))) +
+  geom_col(aes(fill = highlight)) +
+  scale_y_continuous(limits = c(0,140000), expand = c(0,0)) +
+  scale_fill_manual(name = NULL,
+                    values = c("#013e63", "#9A4343", "#C5C5C5")) +
+  labs(title = "Diez países con el mayor PIB per cápita, 2019",
+       caption = paste("Fuente: Elaboración propia en base a", "\n",
+                       "World Development Indicators"),
+       x = NULL,
+       y = NULL) +
+  geom_bar_text(position = "stack", reflow = TRUE, size = 9) +
+  coord_flip() +
+  theme(rect = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position= "top",
+        legend.text = element_text(size = 8))
+
+```
+
+## P5 Gráfico {-}
+
+Construya el siguiente gráfico que muestra la mediana del PIB per cápita por región en el año 2018
+
+```{r}
+wbData3 %>% filter(year == 2018) %>%
+  group_by(region) %>%
+  summarise(median_gdppc = median(gdppc, na.rm = TRUE)) %>%
+  ggplot(aes(x = fct_reorder(as_factor(region), median_gdppc),
+             y = median_gdppc)) +
+  geom_segment(aes(xend = region, y = 0, yend = median_gdppc),
+               colour = "#878787") +
+  geom_point(colour = "#b06b12", size = 2) +
+  scale_y_continuous(limits = c(0,80000), expand = c(0,0)) +
+  labs(title = "Mediana del PIB per cápita por región, 2018",
+       caption = "Fuente: Elaboración propia en base a WDI",
+       x = NULL,
+       y = NULL) +
+  geom_text(aes(label = paste("USD", round(median_gdppc,0))),
+            hjust = -0.1, size = 3) +
+  coord_flip() +
+  theme(rect = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
+```
+
+## P6 Gráfico de cajas {-}
+
+Usando un diagrama de caja, compare la expectativa de vida al nacer entre las diferentes regiones del mundo para el año 2018
+
+```{r}
+wbData3 %>% filter(year == 2018) %>%
+  ggplot(aes(x = region, y = life_expectancy)) +
+  geom_boxplot(fill = "#9A4343") +
+  labs(title = "Expectativa de vida al nacer",
+       subtitle ="2018",
+       x = NULL,
+       y = "Expectativa de vida al nacer (años)") +
+  coord_flip() +
+  theme_classic()
+```
+
+## P7 Histograma {-}
+
+Construya un histograma que represente la distribución del PIB per cápita el año 2019
+
+```{r}
+wbData3 %>% filter(year == 2019) %>%
+  ggplot(aes(x = gdppc)) +
+  geom_histogram(binwidth = 5000, col = "#ffffff", fill = "#800000") +
+  scale_x_continuous(expand = c(0,0),
+                     limits = c(0, 140000),
+                     labels = function(x) x/1000,
+                     breaks = c(0,25000,50000,75000,100000, 125000)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(title = "PIB per cápita alrededor del mundo",
+       subtitle = "2019",
+       x = "PIB per cápita (miles de dólares)",
+       y = "Frecuencia") +
+  theme_classic()
+```
+
+## P8 Función de distribución {-}
+
+Construya la función de distribución acumulada del PIB per cápita para el año 2019
+
+```{r}
+# ecdf: empirical cumulative distribution function
+wbData3 %>% filter(year==2019) %>%
+  ggplot(aes(x = gdppc)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(labels = function(x) x/1000,
+                     breaks = c(0,25000,50000,75000,100000, 125000),
+                     expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(title = "PIB per cápita mundial 2019",
+       subtitle = "Distribución acumulada",
+       x = "PIB per cápita (miles de dólares)",
+       y = "Proporción de países") +
+  theme_classic()
+```
+
+## P9 Gráfico de dispersión {-}
+
+Use un gráfico de dispersión de la expectativa de vida al nacer y PIB per cápita para el año 2018
+
+```{r}
+wbData3 %>% filter(year==2018) %>%
+  ggplot(aes(x=gdppc, y=life_expectancy))+
+  geom_point(alpha = 0.4, size = 0.8) +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       subtitle = "2018",
+       caption = "Fuente: Elaboración propia en base a WDI.",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  theme(panel.background = element_blank(),
+        axis.line = element_line())
+
+wbData3 %>% filter(year==2018) %>%
+  ggplot(aes(x=gdppc, y=life_expectancy))+
+  geom_point(alpha = 0.4, size = 0.8) +
+  scale_x_log10() +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       subtitle = "2018",
+       caption = "Fuente: Elaboración propia en base a WDI.",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  theme(rect = element_blank(),
+        axis.line = element_line())
+```
+
+## P10 Gráfico de dispersión {-}
+
+Use un gráfico de dispersión que muestre la relación entre la expectativa de vida al nacer y PIB per cápita para los países de América Latina y el Caribe, Europa y Asia Central y Este Asiático y Pacífico el año 2018. Use facet_grid para mostrar un gráfico por región.
+
+```{r}
+wbData3 %>% filter(year==2018,
+                   region %in% c("América Latina y el Caribe",
+                                 "Europa y Asia Central",
+                                 "Este Asiático y Pacífico")) %>%
+  ggplot(aes(x=gdppc, y=life_expectancy))+
+  geom_point(alpha = 0.4, size = 0.8, col = "#9A2121") +
+  labs(title = "Expectativa de vida al nacer versus PIB per cápita",
+       subtitle = "2018",
+       caption = "Fuente: Elaboración propia en base a WDI.",
+       x = "PIB per cápita (dólares)",
+       y = "Expectativa de vida al nacer (años)") +
+  facet_grid(cols = vars(region)) +
+  theme_minimal()
+```
+

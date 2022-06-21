@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Parte 7 Modelo de regresión lineal | Guía rápida para aprender R</title>
+  <meta name="description" content="Este libro es una recopilación de ejercicios para familiarizarse rápidamente con R. Asocia sus contenidos a temas de finanzas y economía, pero puede fácilmente ser utilizado por profesionales de distintas áreas para entender el manejo del programa. El objetivo de este libro es acercar la programación a profesionales que aun no están familiarizados con R, y que puedan utilizar este material como apoyo para resolver dudas e inquietudes.
+El libro aun está en progreso de edición. Por mientras, espero que les sirva :)" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Parte 7 Modelo de regresión lineal | Guía rápida para aprender R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Este libro es una recopilación de ejercicios para familiarizarse rápidamente con R. Asocia sus contenidos a temas de finanzas y economía, pero puede fácilmente ser utilizado por profesionales de distintas áreas para entender el manejo del programa. El objetivo de este libro es acercar la programación a profesionales que aun no están familiarizados con R, y que puedan utilizar este material como apoyo para resolver dudas e inquietudes.
+El libro aun está en progreso de edición. Por mientras, espero que les sirva :)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Parte 7 Modelo de regresión lineal | Guía rápida para aprender R" />
+  
+  <meta name="twitter:description" content="Este libro es una recopilación de ejercicios para familiarizarse rápidamente con R. Asocia sus contenidos a temas de finanzas y economía, pero puede fácilmente ser utilizado por profesionales de distintas áreas para entender el manejo del programa. El objetivo de este libro es acercar la programación a profesionales que aun no están familiarizados con R, y que puedan utilizar este material como apoyo para resolver dudas e inquietudes.
+El libro aun está en progreso de edición. Por mientras, espero que les sirva :)" />
+  
+
+<meta name="author" content="Constanza Zepeda" />
+
+
+<meta name="date" content="2022-06-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="mapas.html"/>
+<link rel="next" href="modelos-de-probabilidad-lineal-probit-y-logit.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html"><i class="fa fa-check"></i><b>1</b> Vectores, matrices, listas y data frames</a>
+<ul>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p1-vectores"><i class="fa fa-check"></i>P1 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p2-vectores"><i class="fa fa-check"></i>P2 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p3-tablas"><i class="fa fa-check"></i>P3 Tablas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p4-tasa-crecimiento"><i class="fa fa-check"></i>P4 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p5-tasa-crecimiento"><i class="fa fa-check"></i>P5 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p6-valor-presente"><i class="fa fa-check"></i>P6 Valor presente</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p7-muestras"><i class="fa fa-check"></i>P7 Muestras</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p8-matrices"><i class="fa fa-check"></i>P8 Matrices</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p9-listas"><i class="fa fa-check"></i>P9 Listas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p10-manipulación"><i class="fa fa-check"></i>P10 Manipulación</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="importación-de-datos.html"><a href="importación-de-datos.html"><i class="fa fa-check"></i><b>2</b> Importación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p1-importar-datos"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p2-retorno"><i class="fa fa-check"></i>P2 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p3-retorno"><i class="fa fa-check"></i>P3 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p4-bitcoin"><i class="fa fa-check"></i>P4 Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p5-farmacias"><i class="fa fa-check"></i>P5 Farmacias</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p6-poblacion"><i class="fa fa-check"></i>P6 Poblacion</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html"><i class="fa fa-check"></i><b>3</b> Exploración y transformación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p1-importar-datos-1"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p2-nombrar-variables"><i class="fa fa-check"></i>P2 Nombrar variables</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p3-ordenar-datos"><i class="fa fa-check"></i>P3 Ordenar datos</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p4-cambiar-nombres"><i class="fa fa-check"></i>P4 Cambiar nombres</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p5-contar"><i class="fa fa-check"></i>P5 Contar</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p6-identificar"><i class="fa fa-check"></i>P6 Identificar</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p7-identificar"><i class="fa fa-check"></i>P7 Identificar</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p8-identificar"><i class="fa fa-check"></i>P8 Identificar</a></li>
+<li class="chapter" data-level="" data-path="exploración-y-transformación-de-datos.html"><a href="exploración-y-transformación-de-datos.html#p9-estadística-descriptiva"><i class="fa fa-check"></i>P9 Estadística descriptiva</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html"><i class="fa fa-check"></i><b>4</b> Gráficos estáticos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p1-grafico-de-lineas"><i class="fa fa-check"></i>P1 Grafico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p2-gráfico-de-barras"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p3-gráfico-de-torta"><i class="fa fa-check"></i>P3 Gráfico de torta</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p4-gráfico-de-barras"><i class="fa fa-check"></i>P4 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p5-gráfico"><i class="fa fa-check"></i>P5 Gráfico</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p6-gráfico-de-cajas"><i class="fa fa-check"></i>P6 Gráfico de cajas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p7-histograma"><i class="fa fa-check"></i>P7 Histograma</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p8-función-de-distribución"><i class="fa fa-check"></i>P8 Función de distribución</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p9-gráfico-de-dispersión"><i class="fa fa-check"></i>P9 Gráfico de dispersión</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p10-gráfico-de-dispersión"><i class="fa fa-check"></i>P10 Gráfico de dispersión</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html"><i class="fa fa-check"></i><b>5</b> Gráficos dinámicos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p1-gráficos-varios"><i class="fa fa-check"></i>P1 Gráficos varios</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p2-gráfico-de-barras-1"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p3-gráfico-de-barras"><i class="fa fa-check"></i>P3 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p4-gráfico-de-mancuernas"><i class="fa fa-check"></i>P4 Gráfico de mancuernas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p5-gráfico-de-lineas"><i class="fa fa-check"></i>P5 Gráfico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p6-gráfico-bitcoin"><i class="fa fa-check"></i>P6 Gráfico Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p7-precios-yahoofinance"><i class="fa fa-check"></i>P7 Precios YahooFinance</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p8-retornos-mensuales"><i class="fa fa-check"></i>P8 Retornos mensuales</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mapas.html"><a href="mapas.html"><i class="fa fa-check"></i><b>6</b> Mapas</a></li>
+<li class="chapter" data-level="7" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html"><i class="fa fa-check"></i><b>7</b> Modelo de regresión lineal</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p2"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p3"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="modelos-de-probabilidad-lineal-probit-y-logit.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit.html"><i class="fa fa-check"></i><b>8</b> Modelos de probabilidad lineal, probit y logit</a></li>
+<li class="chapter" data-level="9" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><i class="fa fa-check"></i><b>9</b> Modelos de probabilidad lineal, probit y logit</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p1-1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p2-1"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p3-1"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Guía rápida para aprender R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="modelo-de-regresión-lineal" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Parte 7</span> Modelo de regresión lineal<a href="modelo-de-regresión-lineal.html#modelo-de-regresión-lineal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="modelo-de-regresión-lineal.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb93-2"><a href="modelo-de-regresión-lineal.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb93-3"><a href="modelo-de-regresión-lineal.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
+<span id="cb93-4"><a href="modelo-de-regresión-lineal.html#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb93-5"><a href="modelo-de-regresión-lineal.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wooldridge)</span>
+<span id="cb93-6"><a href="modelo-de-regresión-lineal.html#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
+<span id="cb93-7"><a href="modelo-de-regresión-lineal.html#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb93-8"><a href="modelo-de-regresión-lineal.html#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code></pre></div>
+<div id="p1" class="section level2 unnumbered hasAnchor">
+<h2>P1<a href="modelo-de-regresión-lineal.html#p1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La base de datos ceosal1 contiene información, correspondiente al año 1990, sobre 209 CEO. Los datos son usados en el libro “Introducción a la econometría” de Jeffrey Wooldridge. La siguiente tabla presenta las variables y su descripción contenida en esta base de datos.</p>
+<p>[insertar tabla]</p>
+<p>Usando estos datos se estimará el siguiente modelo que muestra la relación entre el rendimiento sobre el capital (roe)1 y el sueldo anual que reciben los CEO (salary):</p>
+<p><span class="math display">\[
+salary = \beta_0 + \beta_1 roe + u
+\]</span></p>
+<p>donde el parámetro de interés es β1 que mide la variación del sueldo anual, en miles de dólares, que corres-
+ponde a un incremento de un punto porcentual en el rendimiento sobre capital.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="modelo-de-regresión-lineal.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ceosal1)</span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>Estime el modelo especificado arriba usando <em>Mínimos Cuadrados Ordinarios</em>, considerando una espe-
+cificación con constante, otra sin constante y una sólo con intercepto.</li>
+</ol>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="modelo-de-regresión-lineal.html#cb95-1" aria-hidden="true" tabindex="-1"></a>modelA <span class="ot">&lt;-</span> <span class="fu">lm</span>(salary <span class="sc">~</span> roe, <span class="at">data =</span> ceosal1) <span class="co"># modelo con constante</span></span>
+<span id="cb95-2"><a href="modelo-de-regresión-lineal.html#cb95-2" aria-hidden="true" tabindex="-1"></a>modelB <span class="ot">&lt;-</span> <span class="fu">lm</span>(salary <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> roe, <span class="at">data =</span> ceosal1) <span class="co"># modelo sin constante</span></span>
+<span id="cb95-3"><a href="modelo-de-regresión-lineal.html#cb95-3" aria-hidden="true" tabindex="-1"></a>modelC <span class="ot">&lt;-</span> <span class="fu">lm</span>(salary <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> ceosal1) <span class="co"># modelo sólo con intercepto</span></span>
+<span id="cb95-4"><a href="modelo-de-regresión-lineal.html#cb95-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-5"><a href="modelo-de-regresión-lineal.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(<span class="fu">list</span>(modelA, modelB, modelC), <span class="at">type =</span> <span class="st">&quot;latex&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">float =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb95-6"><a href="modelo-de-regresión-lineal.html#cb95-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">no.space =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Muestre la relación entre rendimiento sobre el capital y sueldos de los CEO, usando un gráfico de dispersión, incluyendo la función de regresión muestral estimada en (a).</li>
+</ol>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="modelo-de-regresión-lineal.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ceosal1, <span class="fu">aes</span>(<span class="at">x =</span> roe, <span class="at">y =</span> salary)) <span class="sc">+</span></span>
+<span id="cb96-2"><a href="modelo-de-regresión-lineal.html#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb96-3"><a href="modelo-de-regresión-lineal.html#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb96-4"><a href="modelo-de-regresión-lineal.html#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Rendimiento sobre el capital (%)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Salario CEO (miles de dólares)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb96-5"><a href="modelo-de-regresión-lineal.html#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Muestre que el <span class="math inline">\(R^2\)</span> del modelo A es igual al cuadrado del coeficiente de correlación entre <em>roe</em> y <em>salary</em>.</li>
+</ol>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="modelo-de-regresión-lineal.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;R2 = &quot;</span>, <span class="fu">round</span>(<span class="fu">cor</span>((ceosal1<span class="sc">$</span>roe), ceosal1<span class="sc">$</span>salary)<span class="sc">^</span><span class="dv">2</span>,<span class="dv">3</span>))</span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Use tidy() para crear un tibble con resultados del modelo A</li>
+</ol>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="modelo-de-regresión-lineal.html#cb98-1" aria-hidden="true" tabindex="-1"></a>modelA <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span></code></pre></div>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Calcule el intervalo de confianza para β0 y β1 usando un nivel de confianza de 90%.</li>
+</ol>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="modelo-de-regresión-lineal.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma 1</span></span>
+<span id="cb99-2"><a href="modelo-de-regresión-lineal.html#cb99-2" aria-hidden="true" tabindex="-1"></a>modelA <span class="sc">%&gt;%</span> <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.90</span>)</span>
+<span id="cb99-3"><a href="modelo-de-regresión-lineal.html#cb99-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-4"><a href="modelo-de-regresión-lineal.html#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma 2</span></span>
+<span id="cb99-5"><a href="modelo-de-regresión-lineal.html#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(modelA) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">lim_inf90 =</span> estimate <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.05</span>, <span class="dv">207</span>)<span class="sc">*</span>std.error,</span>
+<span id="cb99-6"><a href="modelo-de-regresión-lineal.html#cb99-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lim_sup90 =</span> estimate <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.95</span>, <span class="dv">207</span>)<span class="sc">*</span>std.error) <span class="sc">%&gt;%</span></span>
+<span id="cb99-7"><a href="modelo-de-regresión-lineal.html#cb99-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error, lim_inf90, lim_sup90)</span>
+<span id="cb99-8"><a href="modelo-de-regresión-lineal.html#cb99-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-9"><a href="modelo-de-regresión-lineal.html#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma 3</span></span>
+<span id="cb99-10"><a href="modelo-de-regresión-lineal.html#cb99-10" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(modelA, <span class="at">level =</span> <span class="fl">0.90</span>)</span></code></pre></div>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Calcule los sueldos predichos por el modelo estimado y los residuos</li>
+</ol>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="modelo-de-regresión-lineal.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(modelA) <span class="sc">%&gt;%</span> <span class="fu">select</span>(salary, roe, .fitted, .resid)</span></code></pre></div>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>Estime el modelo por MCO usando la forma matricial del modelo de regresión lineal múltiple.</li>
+</ol>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="modelo-de-regresión-lineal.html#cb101-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> ceosal1<span class="sc">$</span>salary</span>
+<span id="cb101-2"><a href="modelo-de-regresión-lineal.html#cb101-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">cbind</span>(<span class="dv">1</span>, ceosal1<span class="sc">$</span>roe)</span>
+<span id="cb101-3"><a href="modelo-de-regresión-lineal.html#cb101-3" aria-hidden="true" tabindex="-1"></a>bhat <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">solve</span>(<span class="fu">t</span>(x) <span class="sc">%*%</span> x) <span class="sc">%*%</span> <span class="fu">t</span>(x) <span class="sc">%*%</span> y, <span class="dv">3</span>)</span></code></pre></div>
+<ol start="8" style="list-style-type: lower-alpha">
+<li>Obtenga los errores estándar de <span class="math inline">\(\hat{\beta}\)</span>’s, usando la matriz de varianzas y covarianzas de <span class="math inline">\(\hat{\beta}\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="modelo-de-regresión-lineal.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">diag</span>(<span class="fu">sqrt</span>(<span class="fu">vcov</span>(modelA))),<span class="dv">3</span>)</span></code></pre></div>
+<ol style="list-style-type: lower-roman">
+<li>Calcule los errores estándar robustos a heterocedasticidad.</li>
+</ol>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="modelo-de-regresión-lineal.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">diag</span>(<span class="fu">sqrt</span>(<span class="fu">vcovHC</span>(modelA, <span class="at">type =</span> <span class="st">&quot;HC1&quot;</span>))),<span class="dv">3</span>)</span>
+<span id="cb103-2"><a href="modelo-de-regresión-lineal.html#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-3"><a href="modelo-de-regresión-lineal.html#cb103-3" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">coeftest</span>(modelA, <span class="at">vcov. =</span> vcovHC, <span class="at">type =</span> <span class="st">&quot;HC1&quot;</span>)</span></code></pre></div>
+</div>
+<div id="p2" class="section level2 unnumbered hasAnchor">
+<h2>P2<a href="modelo-de-regresión-lineal.html#p2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suponga que estás interesado en estudiar si las siguientes características de una empresa el año 1990 ayudan para predecir los rendimientos de las acciones en el período 1990-1994: dkr es el cociente de deuda sobre capital de una empresa, eps son las ganancias por acción, netinc es el ingreso neto y salary la compensación total del director general. Sea return el rendimiento total de conservar una acción de una empresa durante el periodo de cuatro años que va desde fines de 1990 hasta fines de 1994. El modelo estimado es:</p>
+<p><span class="math display">\[
+return = \beta_0 + \beta_2 dkr + \beta_2 eps + \beta_3 netinc +\beta_4 salary + u
+\]</span></p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="modelo-de-regresión-lineal.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(return)</span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>Estime el modelo por MCO ¿Qué puede concluir?</li>
+</ol>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="modelo-de-regresión-lineal.html#cb105-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(return <span class="sc">~</span> dkr <span class="sc">+</span> eps <span class="sc">+</span> netinc <span class="sc">+</span> salary, <span class="at">data =</span> return)</span>
+<span id="cb105-2"><a href="modelo-de-regresión-lineal.html#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="modelo-de-regresión-lineal.html#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(<span class="fu">list</span>(model1), <span class="at">type =</span> <span class="st">&quot;latex&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">float =</span> <span class="cn">FALSE</span>, <span class="at">no.space =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Realice un test de significancia global del modelo usando un nivel de significancia de 5%.</li>
+</ol>
+<p><span class="math display">\[
+H_0: \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0
+\]</span></p>
+<p>y la hipótesis alternativa es que por lo menos uno de los <span class="math inline">\(\beta_j\)</span> sea distinto de cero.</p>
+<p><strong>Método 1:</strong></p>
+<p>Usa el siguiente estadígrafo de prueba:</p>
+<p>[escribir estadígrafo]</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="modelo-de-regresión-lineal.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;F Statistic = &quot;</span>, <span class="fu">round</span>(</span>
+<span id="cb106-2"><a href="modelo-de-regresión-lineal.html#cb106-2" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">summary</span>(model1)<span class="sc">$</span>r.squared<span class="sc">/</span><span class="dv">4</span>)<span class="sc">/</span>((<span class="dv">1</span><span class="sc">-</span><span class="fu">summary</span>(model1)<span class="sc">$</span>r.squared)<span class="sc">/</span>(<span class="dv">142-4-1</span>)),<span class="dv">4</span>)</span>
+<span id="cb106-3"><a href="modelo-de-regresión-lineal.html#cb106-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb106-4"><a href="modelo-de-regresión-lineal.html#cb106-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-5"><a href="modelo-de-regresión-lineal.html#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;p-value = &quot;</span>, <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pf</span>(<span class="fl">1.4077</span>, <span class="dv">4</span>, <span class="dv">137</span>),<span class="dv">4</span>))</span></code></pre></div>
+<p><strong>Método 2:</strong></p>
+<p>Usando el paquete car, se realiza el test de hipótesis.</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="modelo-de-regresión-lineal.html#cb107-1" aria-hidden="true" tabindex="-1"></a>myH0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dkr = 0&quot;</span>, <span class="st">&quot;eps = 0&quot;</span>, <span class="st">&quot;netinc = 0&quot;</span>, <span class="st">&quot;salary = 0&quot;</span>)</span>
+<span id="cb107-2"><a href="modelo-de-regresión-lineal.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, myH0)</span></code></pre></div>
+</div>
+<div id="p3" class="section level2 unnumbered hasAnchor">
+<h2>P3<a href="modelo-de-regresión-lineal.html#p3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Usted dispone de precios de ventas de casas en la ciudad de Windsor, Canada, durante los meses de Julio, Agosto y Septiembre de de 1987.</p>
+<p>[insertar tabla]</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="modelo-de-regresión-lineal.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(HousePrices)</span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>¿Cuántas observaciones hay en la base de datos? ¿Qué tipo de variable es cada una de las incluidas en
+la base de datos?</li>
+</ol>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="modelo-de-regresión-lineal.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(HousePrices)</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Estime el siguiente modelo de regresión lineal múltiple:</li>
+</ol>
+<p>[insertar ecuacion]</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="modelo-de-regresión-lineal.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo no restringido</span></span>
+<span id="cb110-2"><a href="modelo-de-regresión-lineal.html#cb110-2" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">=</span> <span class="fu">lm</span>(<span class="fu">log</span>(price) <span class="sc">~</span> <span class="fu">log</span>(lotsize) <span class="sc">+</span> bedrooms <span class="sc">+</span> bathrooms <span class="sc">+</span> aircon <span class="sc">+</span> driveway <span class="sc">+</span></span>
+<span id="cb110-3"><a href="modelo-de-regresión-lineal.html#cb110-3" aria-hidden="true" tabindex="-1"></a>               recreation <span class="sc">+</span> fullbase <span class="sc">+</span> gasheat <span class="sc">+</span> garage <span class="sc">+</span> prefer <span class="sc">+</span> stories, <span class="at">data =</span> HousePrices)</span>
+<span id="cb110-4"><a href="modelo-de-regresión-lineal.html#cb110-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-5"><a href="modelo-de-regresión-lineal.html#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(<span class="fu">list</span>(model_1), <span class="at">type =</span> <span class="st">&quot;latex&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">float =</span> <span class="cn">FALSE</span>, <span class="at">no.space =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Interprete el significado de <span class="math inline">\(\beta_1, \beta_2, \beta_3\)</span> y <span class="math inline">\(\beta_4\)</span>.</p></li>
+<li><p>Testee la siguiente hipótesis usando un nivel de significancia de 5%:</p></li>
+</ol>
+<p>[insertar ecuacion]</p>
+<p>y la hipótesis alternativa es que por lo menos uno de los <span class="math inline">\(\beta_j\)</span> sea distinto de cero.</p>
+<p><strong>Método 1</strong></p>
+<p>Este método usa el paquete car para testear la hipótesis.</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="modelo-de-regresión-lineal.html#cb111-1" aria-hidden="true" tabindex="-1"></a>my_H0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;drivewayyes = 0&quot;</span>, <span class="st">&quot;recreationyes = 0&quot;</span>, <span class="st">&quot;fullbaseyes = 0&quot;</span>, <span class="st">&quot;gasheatyes = 0&quot;</span>,</span>
+<span id="cb111-2"><a href="modelo-de-regresión-lineal.html#cb111-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;garage = 0&quot;</span>, <span class="st">&quot;preferyes = 0&quot;</span>, <span class="st">&quot;stories = 0&quot;</span>)</span>
+<span id="cb111-3"><a href="modelo-de-regresión-lineal.html#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model_1, my_H0)</span></code></pre></div>
+<p><strong>Método 2</strong></p>
+<p>En este método, se estimará el siguiente modelo restringido:</p>
+<p>[insertar ecuacion]</p>
+<p>El estadígrafo de prueba a usar es el siguiente:</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="modelo-de-regresión-lineal.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo restringido</span></span>
+<span id="cb112-2"><a href="modelo-de-regresión-lineal.html#cb112-2" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">=</span> <span class="fu">lm</span>(<span class="fu">log</span>(price) <span class="sc">~</span> <span class="fu">log</span>(lotsize) <span class="sc">+</span> bedrooms <span class="sc">+</span> bathrooms <span class="sc">+</span> aircon, <span class="at">data =</span> HousePrices)</span>
+<span id="cb112-3"><a href="modelo-de-regresión-lineal.html#cb112-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-4"><a href="modelo-de-regresión-lineal.html#cb112-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(<span class="fu">list</span>(model_1, model_2), <span class="at">type =</span> <span class="st">&quot;latex&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">float =</span> <span class="cn">FALSE</span>, <span class="at">no.space =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-5"><a href="modelo-de-regresión-lineal.html#cb112-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-6"><a href="modelo-de-regresión-lineal.html#cb112-6" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;F Statistic = &quot;</span>, <span class="fu">round</span>(</span>
+<span id="cb112-7"><a href="modelo-de-regresión-lineal.html#cb112-7" aria-hidden="true" tabindex="-1"></a>  ((<span class="fu">summary</span>(model_1)<span class="sc">$</span>r.squared<span class="sc">-</span><span class="fu">summary</span>(model_2)<span class="sc">$</span>r.squared)<span class="sc">/</span><span class="dv">7</span>)<span class="sc">/</span></span>
+<span id="cb112-8"><a href="modelo-de-regresión-lineal.html#cb112-8" aria-hidden="true" tabindex="-1"></a>    ((<span class="dv">1</span><span class="sc">-</span><span class="fu">summary</span>(model_1)<span class="sc">$</span>r.squared)<span class="sc">/</span>(<span class="dv">546-11-1</span>)),<span class="dv">3</span>)</span>
+<span id="cb112-9"><a href="modelo-de-regresión-lineal.html#cb112-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb112-10"><a href="modelo-de-regresión-lineal.html#cb112-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-11"><a href="modelo-de-regresión-lineal.html#cb112-11" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;p-value = &quot;</span>, <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pf</span>(<span class="fl">28.993</span>, <span class="dv">7</span>, <span class="dv">534</span>),<span class="dv">4</span>))</span></code></pre></div>
+<p>Por lo tanto, se rechaza <span class="math inline">\(H_0\)</span>.</p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Usando los resultados de la estimación del modelo ¿Cuál es el precio estimado para una casa con las características que se detallan más abajo? Si una casa con estas características se vende a un precio de 200 mil dólares canadiense ¿Recomendaría comprar la casa?</li>
+</ol>
+<p>[insertar tabla]</p>
+<p>El primer intento para predecir el precio de una casa es exp(log(price)). Sin embargo, subestimará de manera sistemática el valor esperado del precio. Se puede demostrar que si u ∼ N(0,σ2), entonces:</p>
+<p>[insertar ecuacion]</p>
+<p>donde <span class="math inline">\(\sigma^2\)</span> es el estimador insesgado de la varianza de u.</p>
+<p><em>Notas:</em></p>
+<ul>
+<li><p>En el output de R se presenta el error estándar de los residuos, el cual puede usarse para realizar este cálculo.</p></li>
+<li><p>Si <span class="math inline">\(u\sim N(0,\sigma^2)\)</span>, entonces el valor esperado de <span class="math inline">\(\exp(u)\)</span> es <span class="math inline">\(\exp(\frac{\sigma^2}{2})\)</span>.</p></li>
+<li><p>Se recomienda revisar un texto de econometría para un método que pueda utilizarse cuando u no se distribuye normalmente.</p></li>
+</ul>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="modelo-de-regresión-lineal.html#cb113-1" aria-hidden="true" tabindex="-1"></a>xpred <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">lotsize =</span> <span class="dv">10000</span>, <span class="at">bedrooms =</span> <span class="dv">4</span>, <span class="at">bathrooms =</span> <span class="dv">1</span>, <span class="at">aircon =</span> <span class="st">&quot;yes&quot;</span>,</span>
+<span id="cb113-2"><a href="modelo-de-regresión-lineal.html#cb113-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">driveway =</span> <span class="st">&quot;yes&quot;</span>, <span class="at">recreation =</span> <span class="st">&quot;yes&quot;</span>, <span class="at">fullbase =</span> <span class="st">&quot;yes&quot;</span>,</span>
+<span id="cb113-3"><a href="modelo-de-regresión-lineal.html#cb113-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gasheat =</span> <span class="st">&quot;yes&quot;</span>, <span class="at">garage =</span> <span class="dv">2</span>, <span class="at">prefer =</span> <span class="st">&quot;yes&quot;</span>, <span class="at">stories =</span> <span class="dv">2</span>)</span>
+<span id="cb113-4"><a href="modelo-de-regresión-lineal.html#cb113-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_1, xpred)</span>
+<span id="cb113-5"><a href="modelo-de-regresión-lineal.html#cb113-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-6"><a href="modelo-de-regresión-lineal.html#cb113-6" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Precio esperado = &quot;</span>, <span class="fu">round</span>(<span class="fu">exp</span>(p<span class="fl">+0.5</span><span class="sc">*</span><span class="fl">0.21</span><span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="mapas.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelos-de-probabilidad-lineal-probit-y-logit.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection",
+"toc_depth": 6,
+"toc_float": null
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

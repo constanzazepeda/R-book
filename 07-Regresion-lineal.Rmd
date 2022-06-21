@@ -1,0 +1,283 @@
+# Modelo de regresión lineal
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(stargazer)
+library(broom)
+library(wooldridge)
+library(AER)
+library(sandwich)
+library(car)
+```
+
+## P1 {-}
+
+La base de datos ceosal1 contiene información, correspondiente al año 1990, sobre 209 CEO. Los datos son usados en el libro “Introducción a la econometría” de Jeffrey Wooldridge. La siguiente tabla presenta las variables y su descripción contenida en esta base de datos.
+
+
+[insertar tabla]
+
+Usando estos datos se estimará el siguiente modelo que muestra la relación entre el rendimiento sobre el capital (roe)1 y el sueldo anual que reciben los CEO (salary):
+
+$$
+salary = \beta_0 + \beta_1 roe + u
+$$
+
+donde el parámetro de interés es β1 que mide la variación del sueldo anual, en miles de dólares, que corres-
+ponde a un incremento de un punto porcentual en el rendimiento sobre capital.
+
+```{r}
+data(ceosal1)
+```
+
+(a) Estime el modelo especificado arriba usando *Mínimos Cuadrados Ordinarios*, considerando una espe-
+cificación con constante, otra sin constante y una sólo con intercepto.
+
+```{r}
+modelA <- lm(salary ~ roe, data = ceosal1) # modelo con constante
+modelB <- lm(salary ~ 0 + roe, data = ceosal1) # modelo sin constante
+modelC <- lm(salary ~ 1, data = ceosal1) # modelo sólo con intercepto
+
+stargazer(list(modelA, modelB, modelC), type = "latex", header = FALSE, float = FALSE,
+          no.space = TRUE)
+```
+
+(b) Muestre la relación entre rendimiento sobre el capital y sueldos de los CEO, usando un gráfico de dispersión, incluyendo la función de regresión muestral estimada en (a).
+
+```{r}
+ggplot(ceosal1, aes(x = roe, y = salary)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(x = "Rendimiento sobre el capital (%)", y = "Salario CEO (miles de dólares)") +
+  theme_classic()
+```
+
+(c) Muestre que el $R^2$ del modelo A es igual al cuadrado del coeficiente de correlación entre *roe* y *salary*.
+
+```{r}
+paste0("R2 = ", round(cor((ceosal1$roe), ceosal1$salary)^2,3))
+```
+
+(d)  Use tidy() para crear un tibble con resultados del modelo A
+
+```{r}
+modelA %>% tidy()
+```
+
+(e) Calcule el intervalo de confianza para β0 y β1 usando un nivel de confianza de 90%.
+
+```{r}
+# Forma 1
+modelA %>% tidy(conf.int = TRUE, conf.level = 0.90)
+
+# Forma 2
+tidy(modelA) %>% mutate(lim_inf90 = estimate + qt(0.05, 207)*std.error,
+                        lim_sup90 = estimate + qt(0.95, 207)*std.error) %>%
+  select(term, estimate, std.error, lim_inf90, lim_sup90)
+
+# Forma 3
+confint(modelA, level = 0.90)
+```
+
+(f) Calcule los sueldos predichos por el modelo estimado y los residuos
+
+```{r}
+augment(modelA) %>% select(salary, roe, .fitted, .resid)
+```
+
+(g) Estime el modelo por MCO usando la forma matricial del modelo de regresión lineal múltiple.
+
+```{r}
+y = ceosal1$salary
+x = cbind(1, ceosal1$roe)
+bhat = round(solve(t(x) %*% x) %*% t(x) %*% y, 3)
+```
+
+(h) Obtenga los errores estándar de $\hat{\beta}$’s, usando la matriz de varianzas y covarianzas de $\hat{\beta}$. 
+
+```{r}
+round(diag(sqrt(vcov(modelA))),3)
+```
+
+(i) Calcule los errores estándar robustos a heterocedasticidad.
+
+```{r}
+round(diag(sqrt(vcovHC(modelA, type = "HC1"))),3)
+
+lmtest::coeftest(modelA, vcov. = vcovHC, type = "HC1")
+```
+
+## P2 {-}
+
+Suponga que estás interesado en estudiar si las siguientes características de una empresa el año 1990 ayudan para predecir los rendimientos de las acciones en el período 1990-1994: dkr es el cociente de deuda sobre capital de una empresa, eps son las ganancias por acción, netinc es el ingreso neto y salary la compensación total del director general. Sea return el rendimiento total de conservar una acción de una empresa durante el periodo de cuatro años que va desde fines de 1990 hasta fines de 1994. El modelo estimado es:
+
+$$
+return = \beta_0 + \beta_2 dkr + \beta_2 eps + \beta_3 netinc +\beta_4 salary + u
+$$
+
+```{r}
+data(return)
+```
+
+(a) Estime el modelo por MCO ¿Qué puede concluir?
+
+```{r}
+model1 <- lm(return ~ dkr + eps + netinc + salary, data = return)
+
+stargazer(list(model1), type = "latex", header = FALSE, float = FALSE, no.space = TRUE)
+```
+
+(b)  Realice un test de significancia global del modelo usando un nivel de significancia de 5%.
+
+$$
+H_0: \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0
+$$
+
+y la hipótesis alternativa es que por lo menos uno de los $\beta_j$ sea distinto de cero.
+
+**Método 1:**
+
+Usa el siguiente estadígrafo de prueba:
+
+[escribir estadígrafo]
+
+```{r}
+paste0("F Statistic = ", round(
+  (summary(model1)$r.squared/4)/((1-summary(model1)$r.squared)/(142-4-1)),4)
+)
+
+paste0("p-value = ", round(1-pf(1.4077, 4, 137),4))
+
+```
+
+
+**Método 2:**
+
+Usando el paquete car, se realiza el test de hipótesis.
+
+```{r}
+myH0 <- c("dkr = 0", "eps = 0", "netinc = 0", "salary = 0")
+linearHypothesis(model1, myH0)
+```
+
+
+## P3 {-}
+
+Usted dispone de precios de ventas de casas en la ciudad de Windsor, Canada, durante los meses de Julio, Agosto y Septiembre de de 1987.
+
+[insertar tabla]
+
+```{r}
+data(HousePrices)
+```
+
+(a) ¿Cuántas observaciones hay en la base de datos? ¿Qué tipo de variable es cada una de las incluidas en
+la base de datos?
+
+```{r}
+glimpse(HousePrices)
+```
+
+(b)  Estime el siguiente modelo de regresión lineal múltiple:
+
+[insertar ecuacion]
+
+```{r}
+# Modelo no restringido
+model_1 = lm(log(price) ~ log(lotsize) + bedrooms + bathrooms + aircon + driveway +
+               recreation + fullbase + gasheat + garage + prefer + stories, data = HousePrices)
+
+stargazer(list(model_1), type = "latex", header = FALSE, float = FALSE, no.space = TRUE)
+```
+
+(c) Interprete el significado de $\beta_1, \beta_2, \beta_3$ y $\beta_4$.
+
+(d) Testee la siguiente hipótesis usando un nivel de significancia de 5%:
+
+[insertar ecuacion]
+
+y la hipótesis alternativa es que por lo menos uno de los $\beta_j$ sea distinto de cero.
+
+**Método 1**
+
+Este método usa el paquete car para testear la hipótesis.
+
+```{r}
+my_H0 <- c("drivewayyes = 0", "recreationyes = 0", "fullbaseyes = 0", "gasheatyes = 0",
+           "garage = 0", "preferyes = 0", "stories = 0")
+linearHypothesis(model_1, my_H0)
+```
+
+**Método 2**
+
+En este método, se estimará el siguiente modelo restringido:
+
+[insertar ecuacion]
+
+El estadígrafo de prueba a usar es el siguiente:
+
+```{r}
+# Modelo restringido
+model_2 = lm(log(price) ~ log(lotsize) + bedrooms + bathrooms + aircon, data = HousePrices)
+
+stargazer(list(model_1, model_2), type = "latex", header = FALSE, float = FALSE, no.space = TRUE)
+
+paste0("F Statistic = ", round(
+  ((summary(model_1)$r.squared-summary(model_2)$r.squared)/7)/
+    ((1-summary(model_1)$r.squared)/(546-11-1)),3)
+)
+
+paste0("p-value = ", round(1-pf(28.993, 7, 534),4))
+```
+
+Por lo tanto, se rechaza $H_0$.
+
+(e) Usando los resultados de la estimación del modelo ¿Cuál es el precio estimado para una casa con las características que se detallan más abajo? Si una casa con estas características se vende a un precio de 200 mil dólares canadiense ¿Recomendaría comprar la casa?
+
+[insertar tabla]
+
+
+El primer intento para predecir el precio de una casa es exp(log(price)). Sin embargo, subestimará de manera sistemática el valor esperado del precio. Se puede demostrar que si u ∼ N(0,σ2), entonces:
+
+
+[insertar ecuacion]
+
+donde $\sigma^2$ es el estimador insesgado de la varianza de u.
+
+*Notas:*
+
+- En el output de R se presenta el error estándar de los residuos, el cual puede usarse para realizar este cálculo.
+
+- Si $u\sim N(0,\sigma^2)$,  entonces el valor esperado de $\exp(u)$ es $\exp(\frac{\sigma^2}{2})$. 
+
+- Se recomienda revisar un texto de econometría para un método que pueda utilizarse cuando u no se distribuye normalmente.
+
+```{r}
+xpred <- data.frame(lotsize = 10000, bedrooms = 4, bathrooms = 1, aircon = "yes",
+                    driveway = "yes", recreation = "yes", fullbase = "yes",
+                    gasheat = "yes", garage = 2, prefer = "yes", stories = 2)
+p <- predict(model_1, xpred)
+
+paste0("Precio esperado = ", round(exp(p+0.5*0.21^2)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

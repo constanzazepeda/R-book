@@ -1,0 +1,138 @@
+# Exploración y transformación de datos
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+```{r}
+library(WDI)
+library(readr)
+library(dplyr)
+library(janitor)
+library(skimr)
+library(kableExtra)
+```
+
+## P1 Importar datos {-}
+
+Obtenga los datos contenidos en el archivo wbData_1960_2020.rds
+
+```{r}
+wbData1 <- read_rds("datos/wbData_1960_2020.rds")
+
+```
+
+## P2 Nombrar variables {-}
+
+Nombre a las variables SP.POP.TOTL, NY.GDP.PCAP.PP.CD, SP.DYN.LE00.IN y SI.POV.GINI como population, gdppc, lifeexpectancy y gini respectivamente.
+
+```{r}
+wbData2 <- wbData1 %>% rename(population= SP.POP.TOTL,
+                              gdppc = NY.GDP.PCAP.PP.CD,
+                              life_expectancy = SP.DYN.LE00.IN,
+                              gini = SI.POV.GINI)
+
+```
+
+## P3 Ordenar datos {-}
+
+```{r}
+wbData2 <- wbData2 %>% arrange(country, year)
+```
+
+## P4 Cambiar nombres {-}
+
+
+Cambie los nombres de las regiones a español. Por ejemplo, cambie la región “Middle East & North Africa” a “Medio Oriente y Norte de Africa”.
+
+```{r}
+wbData2 <- wbData2 %>%
+  mutate(region = recode(region,
+                         "East Asia & Pacific" = "Este Asiático y Pacífico",
+                         "Europe & Central Asia" = "Europa y Asia Central" ,
+                         "Latin America & Caribbean" = "América Latina y el Caribe",
+                         "Middle East & North Africa" = "Medio Oriente y Norte de Africa",
+                         "North America" = "Norteamérica",
+                         "South Asia" = "Asia del Sur",
+                         "Sub-Saharan Africa" = "Africa Subsahariana"))
+
+```
+
+## P5 Contar {-}
+
+¿Cuántos países tiene la base de datos?, ¿Cuántos países por región tiene la base de datos?
+
+```{r}
+wbData3 <- wbData2 %>%
+  filter(region != "Aggregates") %>%
+  droplevels()
+# Número de países
+wbData3 %>% distinct(country) %>% count()
+# Número de países por región
+wbData3 %>% group_by(region) %>% distinct(country) %>%
+  count() %>% ungroup() %>%
+  mutate(prop_region = round((n/sum(n))*100, 1)) %>%
+  adorn_totals("row")
+```
+
+## P6 Identificar {-}
+
+Identifique los 10 países con mayor crecimiento de su población entre los años 2018 y 2019.
+
+```{r}
+wbData3 %>% group_by(country) %>%
+  mutate(crecim_poblacional = round(((population -lag(population))/lag(population))*100, 2)) %>%
+  ungroup() %>%
+  filter(year == 2019) %>%
+  select(country, crecim_poblacional) %>%
+  slice_max(crecim_poblacional, n = 10)
+```
+
+## P7 Identificar {-}
+
+Identifique los 10 países con menor PIB per cápita el año 2019
+
+```{r}
+wbData3 %>% filter(year == 2019) %>%
+  select(country, gdppc) %>%
+  slice_min(gdppc, n = 10)
+```
+
+## P8 Identificar {-}
+
+Para cada una de las regiones del mundo, determine los valores mínimos y máximos del PIB per cápita el año 2019. Además, identifique los países con los mínimos y máximos del PIB per cápita en cada una de las regiones.
+
+```{r}
+wbData3 %>% filter(year ==2019) %>% group_by(region) %>%
+  select(region, country, gdppc) %>%
+  slice_min(gdppc, n = 1)
+
+wbData3 %>% filter(year ==2019) %>% group_by(region) %>%
+  select(region, country, gdppc) %>%
+  slice_max(gdppc, n = 1)
+
+```
+
+## P9 Estadística descriptiva {-}
+
+Para cada una de las regiones del mundo, presente una tabla con estadística descriptiva del PIB per cápita para el año 2018.
+
+```{r}
+wbData3 %>%
+  filter(year == 2018) %>%
+  select(region, gdppc) %>%
+  group_by(region) %>%
+  skim() %>%
+  yank("numeric") %>%
+  select(-c("skim_variable", "n_missing", "complete_rate", "hist")) %>%
+  kbl(booktabs = T, digits = 0, linesep ="",
+      col.names = c("Región", "Media", "Desv. Est.", "Min", "p25", "p50", "p75", "Max")) %>%
+  kable_styling(font_size = 10, latex_options = c("striped", "hold_position"))
+
+write_rds(wbData3, "datos/wbData3_final.rds")
+
+```
+

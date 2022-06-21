@@ -1,0 +1,111 @@
+# Importación de datos
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+
+
+```{r}
+library(dplyr)
+```
+
+## P1 Importar datos {-}
+
+Importe los datos del archivo loan.xlsx. Se recomienda revisar https://www.lendingclub.com/ y https: //es.wikipedia.org/wiki/Lending_Club para mayor información.
+
+```{r}
+library(readxl)
+loan50 <- read_xlsx("datos/loan.xlsx")
+loan50 %>% glimpse()
+```
+
+## P2 Retorno {-}
+
+Obtenga datos del precio de la acción de Netflix para el período 01/01/2018 hasta el 24/03/2022 desde Yahoo! Finance. Además, calcule el retorno diario de la acción usando las siguientes fórmulas:
+
+\begin{align*}
+r_t &= log(p_t)-log(p_{t-1})\\
+r_t &= \frac{p_t-p_{t-1}}{p_{t-1}}
+\end{align*}
+
+```{r}
+library(readr)
+nflx <- read_csv("datos/NFLX.csv")
+nflx <- nflx %>%
+  mutate(retorno_log = log(Close) - log(lag(Close)),
+         retorno_arit = (Close -lag(Close))/lag(Close))
+
+```
+
+## P3 Retorno {-}
+
+Obtenga datos del precio de la acción de COPEC, Falabella y Latam para el período 01/01/2018 hasta el 24/03/2022 desde Yahoo! Finance. Además, calcule el retorno diario de la acción, usando la siguiente fórmula:
+
+$$
+r_t = \frac{P_t-P_{t-1}}{P_{t-1}}
+$$
+```{r}
+library(tidyquant)
+stock_prices <- tq_get(c("COPEC.SN", "FALABELLA.SN", "LTM.SN"),
+                       get = "stock.prices",
+                       from = "2018-01-02", to = "2022-03-25")
+retorno <- stock_prices %>% group_by(symbol) %>%
+  tq_transmute(select = adjusted,
+               mutate_fun = periodReturn,
+               period = "daily",
+               type = "arithmetic",
+               col_rename = "retorno_arit") %>%
+  ungroup()
+
+stock_prices <- stock_prices %>% group_by(symbol) %>%
+  mutate(retorno_diario = (adjusted - lag(adjusted))/lag(adjusted)) %>%
+  ungroup()
+```
+
+## P4 Bitcoin {-}
+
+Obtenga datos del precio del bitcoin para el período 01/01/2016 hasta el 25/03/2022 desde la página web de la Federal Reserve Bank of St. Louis (FRED) (https://fred.stlouisfed.org/series/CBBTCUSD)
+
+```{r}
+bitcoin <- tq_get("CBBTCUSD",
+                  get = "economic.data",
+                  from = "2016-01-01", to = "2022-03-25")
+
+```
+
+## P5 Farmacias {-}
+
+Entre al sitio https://datos.gob.cl/dataset/farmacias-en-chile y obtenga el listado de farmacias a través del territorio nacional.
+
+```{r}
+library(jsonlite)
+farmacias <- fromJSON("https://farmanet.minsal.cl/index.php/ws/getLocales")
+farmacias %>% glimpse()
+```
+
+## P6 Poblacion {-}
+
+Usando el paquete WDI, obtenga datos de población, PIB per cápita ajustado por paridad de poder de compra, expectativa de vida al nacer y coeficiente de Gini para todos los países incluidos en la base de datos en el período 1960-2020.
+
+```{r}
+library(WDI)
+library(readr)
+
+# Población - SP.POP.TOTL
+# PIB per cápita - NY.GDP.PCAP.PP.CD
+# Life expectancy at birth, total (years) (SP.DYN.LE00.IN)
+# Gini index (World Bank estimate) (SI.POV.GINI)
+wbData <- WDI(indicator=c("SP.POP.TOTL",
+                          "NY.GDP.PCAP.PP.CD",
+                          "SP.DYN.LE00.IN",
+                          "SI.POV.GINI"),
+              country="all", extra = TRUE, start=1960, end=2020)
+write_rds(wbData, file = "datos/wbData_1960_2020.rds")
+wbData %>% glimpse()
+```
+
+

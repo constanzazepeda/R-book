@@ -1,0 +1,394 @@
+# Gráficos dinámicos
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+```{r}
+library(ggplot2)
+library(treemapify)
+library(waffle)
+library(dplyr)
+library(forcats)
+library(ggalt)
+library(tidyquant)
+```
+
+## P1 Gráficos varios {-}
+
+Usando datos que se presentan en la siguiente tabla, construye un gráfico de barras y torta.
+
+```{r}
+df <- tibble(
+  categoria = c("B", "A", "D", "C", "E"),
+  prop = c(34,31,20,9,6)
+)
+```
+
+**Barras**
+
+```{r}
+df %>%
+  ggplot(aes(x= categoria, y = prop)) +
+  geom_bar(stat = "identity", fill = rgb(0.6, 0.26, 0.26), width = 0.8) +
+  theme_classic()
+
+df <- df %>% mutate(
+  categoria = fct_reorder(as_factor(categoria), prop),
+  highlight = case_when(categoria == "B" ~ "1",
+                        categoria == "D" ~ "2",
+                        TRUE ~ "3"))
+
+df %>%
+  ggplot(aes(x= fct_rev(categoria), y = prop)) +
+  geom_bar(stat = "identity", fill = rgb(0.6, 0.26, 0.26), width = 0.8) +
+  theme_classic()
+
+df %>% ggplot(aes(x= categoria, y = prop, fill = highlight)) +
+  geom_bar(stat = "identity", width = 0.8) +
+  geom_text(aes(label= paste0(prop, "%"), hjust = 1.3), size = 5, color = "white") +
+  scale_y_continuous(limits = c(0,36), expand = c(0,0)) +
+  scale_fill_manual(values = c(rgb(0.04,0.07, 0.26),
+                               rgb(0.6, 0.26, 0.26),
+                               rgb(0.81, 0.81, 0.81))) +
+  labs(title = "Ventas por región (porcentaje)",
+       caption = "Total 100%") +
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size = 14, color = "#636363"),
+        plot.caption = element_text(size = 13, color = "#AD9F9F"),
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 12, color = "#AD9F9F"),
+        axis.title = element_blank(),
+        axis.line.x = element_line(size = 0.3, color = "#AD9F9F"),
+        legend.position = "none") +
+  coord_flip()
+```
+
+
+**Torta**
+
+```{r}
+df <- df %>% arrange(desc(categoria))
+df$ypos <- cumsum(df$prop) - 0.5*df$prop
+df %>% ggplot(aes(x= 1, y = prop, fill = categoria)) +
+  geom_bar(stat = "identity", color = "white") +
+  coord_polar(theta = 'y') +
+  geom_text(aes(x = 1.1, y = ypos, label = paste0(prop, "%")), color = "white")+
+  scale_fill_manual(name = "",
+                    values = c(A = "#66c2a5", B = "#fc8d62", C= "#8da0cb", D = "#e78ac3",
+                               E = "#a6d854")) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+**Waffle**
+
+```{r}
+vals =c(`A`= 31,`B`=34,`C`=9,`D`= 20,`E`=6)
+waffle(vals, rows = 5, size = 1,
+       colors = c(A = "#66c2a5", B = "#fc8d62", C= "#8da0cb", D = "#e78ac3", E = "#a6d854"),
+       title="Ventas por región (porcentaje)")
+```
+
+**Treemap**
+
+```{r}
+df %>%
+  ggplot(aes(area= prop, fill = categoria, label = categoria)) +
+  geom_treemap(show.legend = FALSE, color = "white")+
+  geom_treemap_text(place = "topleft", min.size = 2, padding.y = grid::unit(1, "mm"),
+                    grow = FALSE, colour = "white")+
+  scale_x_continuous(limits = c(0,1)) +
+  scale_y_continuous(limits = c(0,1)) +
+  scale_fill_manual(values = c(A = "#66c2a5", B = "#fc8d62", C= "#8da0cb", D = "#e78ac3",
+                               E = "#a6d854"))+
+  annotate(geom = "text", x = 0.605, y = 0.59, label = "31%", size = 6, color = "#FFFFFF")+
+  annotate(geom = "text", x = 0.605, y = 0.01, label = "34%", size = 6, color = "#FFFFFF")+
+  annotate(geom = "text", x = 0.99, y = 0.01, label = "20%", size = 6, color = "#FFFFFF")+
+  annotate(geom = "text", x = 1, y = 0.65, label = "9%", size = 6, color = "#FFFFFF")+
+  annotate(geom = "text", x = 1, y = 0.92, label = "6%", size = 6, color = "#FFFFFF")+
+  labs(title = "Participación de ventas por región",
+       caption = "Fuente: Elaboración propia") +
+  theme(plot.title = element_text(size = 14, color = "#636363"),
+        plot.caption = element_text(size = 10, color = "#AD9F9F"),
+        axis.title =element_blank(),
+        axis.text =element_blank(),
+        axis.ticks =element_blank())
+```
+
+## P2 Gráfico de barras {-}
+
+Usando datos que se presentan en la siguiente tabla, construye gráficos de barras.
+
+```{r}
+df2 <- tibble(
+  year = c(2017, 2017, 2018, 2018, 2019, 2019, 2020, 2020),
+  sexo = c("Hombres", "Mujeres", "Hombres", "Mujeres",
+           "Hombres", "Mujeres", "Hombres", "Mujeres"),
+  total = c(100, 80, 50, 150, 90, 180, 110, 150)
+)
+
+df2 %>% ggplot(aes(x= year, y = total, fill = sexo)) +
+  geom_col(position = "dodge", width = 0.8) +
+  scale_y_continuous(expand = c(0,0)) +
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size = 14, color = "#636363"),
+        plot.caption = element_text(size = 13, color = "#AD9F9F"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_line(size = 0.3, color = "#AD9F9F"),
+        axis.text.x = element_text(size = 12, color = "#AD9F9F"),
+        axis.text.y = element_text(size = 12, color = "#AD9F9F"),
+        axis.title = element_blank(),
+        axis.line = element_line(size = 0.3, color = "#AD9F9F"),
+        legend.position = "top")
+
+df2 %>% ggplot(aes(x= year, y = total, fill = sexo)) +
+  geom_col(position = "fill", width = 0.8) +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_fill_manual(name = "",
+                    values = c(rgb(0.04,0.07, 0.26),
+                               rgb(0.6, 0.26, 0.26)))+
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size = 14, color = "#636363"),
+        plot.caption = element_text(size = 13, color = "#AD9F9F"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_line(size = 0.3, color = "#AD9F9F"),
+        axis.text.x = element_text(size = 12, color = "#AD9F9F"),
+        axis.text.y = element_text(size = 12, color = "#AD9F9F"),
+        axis.title = element_blank(),
+        axis.line = element_line(size = 0.3, color = "#AD9F9F"),
+        legend.position = "top")
+
+```
+
+## P3 Gráfico de barras {-}
+
+Grafique la función de densidad de probabilidad para una variable x que tiene una distribución normal con $\mu = 0$ y $\sigma = 0.5, 1, 2$.
+Nota: La función de densidad de probabilidad de una variable $X$ con distribución normal es:
+
+$$
+f(x) = \frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}} \hspace{5pt} -\infty < x < \infty
+$$
+
+```{r}
+ggplot(data.frame(x=c(-5,5)), aes(x)) +
+  stat_function(fun=dnorm, args=list(mean=0, sd=0.5),
+                geom="line", colour="red", size=1) +
+  stat_function(fun=dnorm, args=list(mean=0, sd=1),
+                geom="line", colour="black", size=1) +
+  stat_function(fun=dnorm, args=list(mean=0, sd=2),
+                geom="line", colour="blue", size=1) +
+  scale_x_continuous(breaks = seq(-5,5), label = seq(-5,5)) +
+  scale_y_continuous(expand= c(0,0)) +
+  annotate(geom = "text", x = 1.5, y = 0.75, parse = TRUE,
+           label = "mu==0 ~ ',' ~ sigma == 0.5") +
+  annotate(geom = "text", x = 2, y = 0.3, parse = TRUE,
+           label = "mu==0 ~ ',' ~ sigma == 1") +
+  annotate(geom = "text", x = 3, y = 0.15, parse = TRUE,
+           label = "mu==0 ~ ',' ~ sigma == 2") +
+  annotate("segment", x = 1.5, xend = 0.4, y = 0.72, yend = 0.65, colour = "black", size=0.6,
+           arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 2, xend = 1.3, y = 0.27, yend = 0.2, colour = "black", size=0.6,
+           arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  annotate("segment", x = 3, xend = 2.6, y = 0.12, yend = 0.1, colour = "black", size=0.6,
+           arrow=arrow(length = unit(0.15, "cm"), type = "closed")) +
+  labs(x = "x", y= "") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+## P4 Gráfico de mancuernas {-}
+
+Usando datos de homicidios que se presentan en la siguiente tabla, construye un gráfico de mancuernas.
+
+
+```{r}
+df <- tibble::tibble(country=c("Región A", "Región B", "Región C",
+                               "Región D", "Región E"),
+                     year2018 =c(110, 90, 100, 70, 50),
+                     year2022 =c(140, 150, 140, 100, 90))
+
+df %>% ggplot(aes(y=country, x=year2018, xend=year2022)) +
+  geom_dumbbell(size=3, color="#e3e2e1",
+                colour_x = "#1b9e77", colour_xend = "#d95f02") +
+  labs(title = "Número de homicidios 2018-2022", x="Número de homicidios", y=NULL) +
+  theme_minimal()
+```
+
+## P5 Gráfico de lineas {-}
+
+El valor de una máquina en el año t cuyo valor inicial es $A_0$ y que se deprecia a una tasa de r por año es igual a:
+$$
+A_t =A_0(1−r)^t
+$$
+Construya un gráfico que muestre la evolución del valor de la máquina, asumiendo $A_0 = 3000000$ y una tasa de depreciación de $15%$ y $20%$.
+
+```{r}
+A0 = 3000000
+r1 = 0.15
+r2 = 0.20
+t = seq(0,10,1)
+y15 = A0*(1-r1)**t
+y20 = A0*(1-r2)**t
+data <- tibble::tibble(t,y15, y20)
+data %>% ggplot() +
+  geom_line(aes(t,y15), lty = "dashed", size=1) +
+  geom_line(aes(t,y20), lty = "dotted", size=1) +
+  scale_x_continuous(breaks = seq(0,10,1), labels = seq(0,10,1),
+                     limits = c(0,12), expand = c(0,0)) +
+  scale_y_continuous(labels = scales::label_number()) +
+  annotate(geom = "text", x=10.7, y=601500, label = "r=15%") +
+  annotate(geom = "text", x=10.7, y=351500, label = "r=20%") +
+  labs(x = "Año", y = "Valor de máquina ($)") +
+  theme_classic()
+```
+
+
+## P6 Gráfico Bitcoin {-}
+
+Obtenga precios del bitcoin para el período 01-01-2016 al 11-04-2022. Grafique los precios diarios y la media móvil de 30 días.
+
+```{r}
+# Precio del Bitcoin
+bitcoin <- tq_get("CBBTCUSD", get = "economic.data", from = "2016-01-01", to = "2022-04-11")
+
+bitcoin %>%
+  ggplot(aes(x = date, y = price)) +
+  geom_line() +
+  geom_ma(ma_fun = SMA, n = 30, linetype = "twodash", size = 0.8, color = "red") +
+  scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  labs(title = "Precio de bitcoin",
+       caption = paste0("Fuente: Coinbase, obtenido de Federal Reserve Bank of St. Louis (FRED)",
+                        "\n",
+                        "https://fred.stlouisfed.org/series/CBBTCUSD"),
+       x = NULL,
+       y = "Precio (US$)") +
+  theme_tq()
+```
+
+## P7 Precios YahooFinance {-}
+
+Obtenga precios de las acciones de Copec, Falabella y Latam desde YahooFinance para el período 01-01-2012 al 11-04-2022.
+
+```{r}
+# Acciones de Copec
+copec <- tq_get("COPEC.SN", get = "stock.prices", from = "2012-01-01", to = "2022-04-11")
+# Acciones de Falabella
+falabella <- tq_get("FALABELLA.SN", get = "stock.prices", from = "2012-01-01", to = "2022-04-11")
+# Acciones de Latam
+latam <- tq_get("LTM.SN", get = "stock.prices", from = "2012-01-01", to = "2022-04-11") #latam
+stocks <- bind_rows("COPEC" = copec, "Falabella" = falabella, "LATAM" = latam, .id = "id")
+```
+
+(a) Grafique los precios de las acciones para el período 01-01-2010 al 11-04-2022.
+
+```{r}
+stocks %>%
+  ggplot(aes(x = date, y = close)) +
+  geom_line() +
+  scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  coord_x_date(xlim = c("2012-01-01", "2022-04-11")) +
+  labs(x = NULL, y = "Precio de cierre ($)") +
+  facet_grid(rows = vars(id), scales = "free_y") +
+  theme_bw()
+```
+
+(b) Grafique los retornos diarios para el período 01-01-2019 al 11-04-2022.
+
+```{r}
+retornos_diarios <- stocks %>% group_by(id) %>%
+  mutate(daily_retorno = ((close - lag(close))/lag(close))*100) %>%
+  ungroup()
+retornos_diarios %>% ggplot(aes(x = date, y = daily_retorno)) +
+  geom_line() +
+  scale_x_date(date_breaks = "6 months", date_labels = "%Y %m") +
+  coord_x_date(xlim = c("2019-01-01", "2022-04-11")) +
+  labs(x = NULL, y = "Retorno diario (%)") +
+  facet_grid(rows = vars(id), scales = "free_y") +
+  theme_tq()
+```
+
+(c) Construya un strip chart de los retornos diarios de COPEC, Falabella y LATAM para el período 01-09-2019 al 22-04-2021.
+
+```{r}
+retornos_diarios %>% filter(date >= ymd('2019-09-01')) %>%
+  ggplot(aes(x = id, y = daily_retorno, col = id)) +
+  geom_point(size = 1, alpha = 0.3, position = position_jitter(width = 0.32)) +
+  scale_y_continuous(breaks = seq(-45,45,10), label = paste0(seq(-45,45,10), "%")) +
+  scale_colour_brewer(palette = "Dark2") +
+  labs(title = "Retornos diarios de acciones de LATAM y Falabella (en porcentaje)",
+       subtitle = "01/09/2019 al 11/04/2022",
+       caption = "Retorno diario",
+       x = NULL,
+       y = NULL) +
+  coord_flip() +
+  theme(
+    rect = element_blank(),
+    plot.title = element_text(color = "#6E7172"),
+    plot.subtitle = element_text(color = "#6E7172"),
+    plot.caption = element_text(size = 9, color = "#989898"),
+    axis.line.x=element_line(size = 0.4, color = "#D9D1D1"),
+    axis.ticks.x = element_line(size = 0.4, color = "#D9D1D1"),
+    axis.text = element_text(color = "#989898"),
+    axis.ticks.y = element_blank(),
+    legend.position = 'none')
+```
+
+(d) Grafique la densidad de los retornos diarios de COPEC, Falabella y LATAM desde 01-01-2019
+
+```{r}
+retornos_diarios %>% filter(date >= ymd('2019-01-01')) %>%
+  ggplot(mapping = aes(x = daily_retorno, fill = id)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Retornos diarios (en porcentaje)",
+       subtitle = "Falabella y LATAM",
+       x = "Retornos diarios (%)", y = "Densidad") +
+  facet_grid(cols = vars(id), scales = "free") +
+  theme_tq() +
+  scale_fill_tq() +
+  theme(legend.position = "none")
+```
+
+
+## P8 Retornos mensuales {-}
+
+Obtenga precios de las acciones de Copec, Falabella y Latam desde YahooFinance para el período 01-01-2010 al 11-04-2022. Calcule los retornos mensuales y grafique los retornos de un portafolio compuesto 40% por acciones de COPEC, 40% por acciones de Falabella y 20% por acciones de LATAM.
+
+```{r}
+precios_diarios <- c("COPEC.SN", "FALABELLA.SN", "LTM.SN") %>%
+  tq_get(get = "stock.prices", from = "2010-01-01", to = "2022-04-11")
+
+retorno_mensual <- precios_diarios %>%
+  group_by(symbol) %>%
+  tq_transmute(select = adjusted,
+               mutate_fun = periodReturn,
+               period = "monthly",
+               type = "arithmetic",
+               col_rename = "ret_mensual")
+
+peso_acciones <- tibble(symbols = c("COPEC.SN", "FALABELLA.SN", "LTM.SN"),
+                        weights = c(0.4, 0.4, 0.2))
+
+retorno_mensual_portafolio <- retorno_mensual %>%
+  tq_portfolio(assets_col = symbol,
+               returns_col = ret_mensual,
+               geometric = FALSE,
+               weights = peso_acciones,
+               col_rename = "RetornoPortafolio")
+
+retorno_mensual_portafolio %>%
+  ggplot(aes(x = date, y = RetornoPortafolio)) +
+  geom_line() +
+  scale_x_date(date_breaks = "1 years", date_labels = "%Y") +
+  labs(title = "Retorno portafolio",
+       x = NULL, y = "Retorno mensual") +
+  theme_tq()
+```
+

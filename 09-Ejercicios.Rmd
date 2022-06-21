@@ -1,0 +1,316 @@
+# Modelos de probabilidad lineal, probit y logit
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", fig.width = 6,
+  eval=FALSE, message=FALSE, warning=FALSE, include=TRUE
+)
+```
+
+
+## P1 {-}
+
+A continuación se analizará el efecto que tuvo la participación en un programa de capacitación laboral en la probabilidad de desempleo. El programa fue asignado aleatoriamente a un grupo de 445 hombres, quienes podían ingresar al programa a partir de enero de 1976 hasta mediados de 1977. El programa terminó en diciembre de 1977. Los datos se encuentran en el archivo jtrain2.dta.
+
+```{r}
+jtrain2 %>% glimpse()
+```
+
+(a)  Presente una tabla que presente la distribución de la muestra en su status de desempleo, de acuerdo a su participación en el programa.
+
+```{r}
+jtrain2 %>% tabyl(unem78, train) %>%
+  adorn_totals(where = c("row","col")) %>%
+  adorn_title("combined") %>%
+  knitr::kable()
+```
+
+(b) Estime un modelo de probabilidad lineal, probit y logit para la probabilidad de desempleo como función de la participación en el programa de capacitación.
+
+```{r}
+model1_1 <- lm(unem78 ~ train, data = jtrain2)
+model1_2 <- glm(unem78 ~ train, family = binomial(link = "probit"), data = jtrain2)
+model1_3 <- glm(unem78 ~ train, family = binomial(link = "logit"), data = jtrain2)
+
+stargazer(list(model1_1, model1_2, model1_3), type = "latex",
+          header = FALSE, float = FALSE, no.space = TRUE)
+
+```
+
+(c) Calcule los errores estándar robustos a heterocedasticidad del modelo de probabilidad lineal
+
+```{r}
+coeftest(model1_1, vcov = vcovHC(model1_1, type="HC1"))
+```
+
+
+(d) Calcule el efecto de la capacitación sobre la probabilidad de estar desempleado.
+
+- modelo de probabilidad lineal 
+
+```{r}
+pnorm(-0.696)
+pnorm(-0.375)
+```
+
+- modelo probit 
+
+```{r}
+exp(-1.135)/(1+exp(-1.135))
+exp(-0.602)/(1+exp(-0.602))
+```
+
+- modelo logit
+
+```{r}
+logitmfx(unem78 ~ train, data = jtrain2, atmean=FALSE) # Average partial effect (APE)
+logitmfx(unem78 ~ train, data = jtrain2, atmean=TRUE) # Partial effect at the average (PEA)
+```
+
+- modelo marginal para logit 
+
+```{r}
+probitmfx(unem78 ~ train, data = jtrain2, atmean=FALSE) # Average partial effect (APE)
+probitmfx(unem78 ~ train, data = jtrain2, atmean=TRUE) # Partial effect at the average (PEA)
+```
+
+## P2 {-}
+
+Suponga que desea analizar los determinantes de la denegación de una solicitud de préstamo hipotecario. Para ello cuenta con los siguientes datos referidos a las solicitudes de hipotecas recogidas en el área de Boston, Massachusetts, en 1990: 
+
+[insertar tabla]
+
+```{r}
+data(HMDA)
+
+glimpse(HMDA)
+```
+
+(a) En la década de 1990 los empleados de entidades de crédito habitualmente utilizaban valores de corte para la proporción préstamo-valor, por lo que construya las siguientes variables dummies:
+
+[insertar tramos]
+
+```{r}
+HMDA <- HMDA %>% mutate(lvrat_bajo = if_else(lvrat < 0.8, 1,0),
+                         lvrat_medio = if_else(lvrat >= 0.8 & lvrat <=0.95, 1,0),
+                         lvrat_alto = if_else(lvrat > 0.95, 1,0))
+
+```
+
+(b) Transforme a variables numéricas las variables mhist, chist y deny
+
+```{r}
+HMDA$mhist <- as.numeric(HMDA$mhist)
+HMDA$chist <- as.numeric(HMDA$chist)
+
+
+HMDA$denegar <- as.numeric(HMDA$deny)
+HMDA <- HMDA %>% mutate(denegar = denegar - 1)
+```
+
+
+(c) ¿Qué porcentaje de las solicitudes de crédito hipotecario fueron denegadas?
+
+```{r}
+HMDA %>% tabyl(deny) %>%
+  adorn_totals("row") %>%
+  adorn_pct_formatting() %>% knitr::kable()
+```
+
+(d) Estime un modelo de probabilidad lineal, logit y probit.
+
+```{r}
+# Modelo de probabilidad lineal
+model_linear1 <- lm(denegar ~ afam + pirat + hirat + lvrat_medio + lvrat_alto +
+                      chist + mhist + phist + insurance + selfemp, data = HMDA)
+
+
+# Modelo logit
+model_logit1 <- glm(denegar ~ afam + pirat + hirat + lvrat_medio + lvrat_alto +
+                      chist + mhist + phist + insurance + selfemp,
+                    family = binomial(link = "logit"),
+                    data = HMDA)
+
+# Modelo probit
+model_probit1 <- glm(denegar ~ afam + pirat + hirat + lvrat_medio + lvrat_alto +
+                       chist + mhist + phist + insurance + selfemp,
+                     family = binomial(link = "probit"),
+                     data = HMDA)
+
+stargazer(list(model_linear1, model_logit1, model_probit1), type = "latex",
+          header = FALSE, float = FALSE, no.space = TRUE)
+
+```
+
+(e) Para el caso del modelo de probabilidad chequee si existen valores predichos menores a cero o mayores a 1 ¿Cuántas observaciones se encuentran fuera del rango 0-1?
+
+```{r}
+augment(model_linear1) %>%
+  summarize(
+    n = n(),
+    mean = mean(.fitted),
+    sd = sd(.fitted),
+    min = min(.fitted),
+    p25 = quantile(.fitted, 0.25),
+    p50 = median(.fitted),
+    p75 = quantile(.fitted, 0.75),
+    max = max(.fitted)) %>%
+  knitr::kable(digits = 2, booktabs = T) %>%
+  kableExtra::kable_styling()
+
+
+augment(model_linear1) %>%
+  filter(.fitted < 0 | .fitted > 1) %>% count()
+```
+
+(f) Para el modelo de probabilidad lineal presente las estimaciones incluyendo errores estándar robustos a heterocedasticidad.
+
+```{r}
+coeftest(model_linear1, vcov. = vcovHC, type = "HC1")
+```
+
+## P3 {-}
+
+Un banco está interesado en entender los factores que predicen el no pago de las deudas de tarjetas de crédito para lo que cuenta con una base de datos de 10000 personas con las siguientes variables:
+
+[insertar tabla]
+
+```{r}
+data(Default)
+```
+
+(a) ¿Cuántas observaciones contiene el dataset Default?, ¿Cuántas personas default?
+
+```{r}
+glimpse(Default)
+table(Default$default)
+levels(Default$default)
+
+Default$default <- forcats::fct_relevel(Default$default, "Yes")
+table(Default$default)
+```
+
+(b) Asigne aleatoriamente el 80% de las 10000 observaciones a la muestra de entrenamiento y el 20% restante, a la muestra de prueba.
+
+```{r}
+set.seed(3456)
+# Coloca el 80 % de las observaciones en la muestra de entrenamiento
+default_split <- Default %>% initial_split(prop = 0.80, strata = default)
+default_train <- default_split %>% training()
+default_test <- default_split %>% testing()
+```
+
+(c) Estime el modelo logit usando la muestra de entrenamiento.
+
+```{r}
+# Especificación del modelo
+logistic_model <- logistic_reg() %>%
+  set_engine('glm') %>%
+  set_mode('classification')
+
+logistic_model
+
+# Ajuste del modelo al training dataset, especificando la fórmula
+logistic_fit <- logistic_model %>%
+  fit(default ~ student + balance + income,
+      data = default_train)
+
+logistic_fit %>% tidy()
+```
+
+(d) Usando la estimación del modelo logit, calcule el efecto marginal de un cambio en el balance sobre la probabilidad de default. Específicamente calcule PEA y APE.
+
+```{r}
+# Cálculo de Average Partial Effect
+logitmfx(default ~ student + balance + income, data = default_train, atmean=FALSE) # APE
+# Cálculo de Partial Effect at the Average
+logitmfx(default ~ student + balance + income, data = default_train, atmean=TRUE) # PEA
+```
+
+(e) Calcule las probabilidades de default y categorías predichas para la muestra de prueba
+
+```{r}
+# Predicciones de default = Yes o default = No
+class_pred <- logistic_fit %>%
+  predict(new_data = default_test, type = "class")
+
+# Predicciones de probabilidades de default
+prob_pred <- logistic_fit %>%
+  predict(new_data = default_test, type = "prob")
+
+prob_pred %>%
+  summarize(
+    n = n(),
+    mean = mean(.pred_Yes),
+    sd = sd(.pred_Yes),
+    min = min(.pred_Yes),
+    p25 = quantile(.pred_Yes, 0.25),
+    p50 = median(.pred_Yes),
+    p75 = quantile(.pred_Yes, 0.75),
+    max = max(.pred_Yes)) %>%
+  knitr::kable(digits = 4, booktabs = T) %>%
+  kableExtra::kable_styling()
+```
+
+(f) Usando la estimación del modelo logit, calcule la probabilidad de default para dos personas que difieren sólo en su calidad de estudiante.
+
+[insertar categorias]
+
+```{r}
+eval <- tibble::tibble(
+  student = c("Yes","No"),
+  balance = 1500,
+  income = 40000
+)
+logistic_fit %> % predict(new_data = eval, type = "prob")
+```
+
+[insertar ecuaciones]
+
+(g) Calcule la matriz de confusión, sensitivity, specificity y accuracy
+
+```{r}
+# Evaluación del modelo
+default_results <- default_test %>%
+  bind_cols(class_pred, prob_pred)
+
+# Matriz de confusión
+default_results %>% conf_mat(truth = default, estimate = .pred_class)
+
+# Accuracy
+default_results %>% accuracy(truth = default, estimate = .pred_class)
+
+# Sensitivity (tasa de verdaderos positivos)
+default_results %>% sens(truth = default, estimate = .pred_class)
+
+# Especificity (tasa de verdaderos negativos)
+default_results %>% spec(truth = default, estimate = .pred_class)
+
+
+perf_metrics <- metric_set(accuracy, sens, spec)
+default_results %>% perf_metrics(truth = default, estimate = .pred_class)
+```
+
+(h) Grafique la curva ROC (Receiver Operating Characteristic)
+
+Esta curva relaciona la tasa de falsos positivos (1−specificity) y la tasa de verdaderos positivos (sensitivity),
+calculados a partir de distintos valores para el cutoff.
+
+```{r}
+default_results %>% roc_curve(truth = default, .pred_Yes)
+default_results %>% roc_curve(truth = default, .pred_Yes) %>%
+  ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+  geom_line() +
+  geom_abline(lty = "dotted", colour = "#797979") +
+  coord_fixed() +
+  theme_minimal()
+```
+
+(i) Una manera de resumir la información de la ROC curve en un único número es el área bajo la curva ROC conocido como AUC. Calcule el AUC.
+
+```{r}
+default_results %>% roc_auc(truth = default, .pred_Yes)
+```
+
+
+
