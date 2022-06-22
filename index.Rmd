@@ -18,9 +18,9 @@ Este libro es una recopilación de ejercicios para familiarizarse rápidamente c
 
 Los contenidos están asociados a temas de finanzas y economía, pero puede ser fácilmente utilizado por profesionales y estudiantes de otras áreas.
 
-Les invito a todes quienes tengan curiosidad e incipientes deseos de aprender algo de programación, revisar esta recopilación de ejercicios y sin miedo aventurarse a explorar.
+Les invito a todes quienes tengan curiosidad e incipientes deseos de aprender algo de programación, a revisar esta recopilación de ejercicios y aventurarse a explorar.
 
-El libro aun está en progreso de edición. Por mientras, espero que les sirva :)
+El libro aun está en proceso de edición. Por mientras, espero que les sirva :)
 
 
 
