@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Parte 2 Vectores, matrices, listas y data frames | Guía rápida para aprender R</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Parte 2 Vectores, matrices, listas y data frames | Guía rápida para aprender R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Parte 2 Vectores, matrices, listas y data frames | Guía rápida para aprender R" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Constanza Zepeda" />
+
+
+<meta name="date" content="2022-06-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="importación-de-datos.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html"><i class="fa fa-check"></i><b>2</b> Vectores, matrices, listas y data frames</a>
+<ul>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p1-vectores"><i class="fa fa-check"></i>P1 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p2-vectores"><i class="fa fa-check"></i>P2 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p3-tablas"><i class="fa fa-check"></i>P3 Tablas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p4-tasa-crecimiento"><i class="fa fa-check"></i>P4 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p5-tasa-crecimiento"><i class="fa fa-check"></i>P5 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p6-valor-presente"><i class="fa fa-check"></i>P6 Valor presente</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p7-muestras"><i class="fa fa-check"></i>P7 Muestras</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p8-matrices"><i class="fa fa-check"></i>P8 Matrices</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p9-listas"><i class="fa fa-check"></i>P9 Listas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p10-manipulación"><i class="fa fa-check"></i>P10 Manipulación</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importación-de-datos.html"><a href="importación-de-datos.html"><i class="fa fa-check"></i><b>3</b> Importación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p1-importar-datos"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p2-retorno"><i class="fa fa-check"></i>P2 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p3-retorno"><i class="fa fa-check"></i>P3 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p4-bitcoin"><i class="fa fa-check"></i>P4 Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p5-farmacias"><i class="fa fa-check"></i>P5 Farmacias</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p6-poblacion"><i class="fa fa-check"></i>P6 Poblacion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html"><i class="fa fa-check"></i><b>4</b> Importación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p1-importar-datos-1"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p2-nombrar-variables"><i class="fa fa-check"></i>P2 Nombrar variables</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p3-ordenar-datos"><i class="fa fa-check"></i>P3 Ordenar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p4-cambiar-nombres"><i class="fa fa-check"></i>P4 Cambiar nombres</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p5-contar"><i class="fa fa-check"></i>P5 Contar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p6-identificar"><i class="fa fa-check"></i>P6 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p7-identificar"><i class="fa fa-check"></i>P7 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p8-identificar"><i class="fa fa-check"></i>P8 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p9-estadística-descriptiva"><i class="fa fa-check"></i>P9 Estadística descriptiva</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html"><i class="fa fa-check"></i><b>5</b> Gráficos estáticos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p1-grafico-de-lineas"><i class="fa fa-check"></i>P1 Grafico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p2-gráfico-de-barras"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p3-gráfico-de-torta"><i class="fa fa-check"></i>P3 Gráfico de torta</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p4-gráfico-de-barras"><i class="fa fa-check"></i>P4 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p5-gráfico"><i class="fa fa-check"></i>P5 Gráfico</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p6-gráfico-de-cajas"><i class="fa fa-check"></i>P6 Gráfico de cajas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p7-histograma"><i class="fa fa-check"></i>P7 Histograma</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p8-función-de-distribución"><i class="fa fa-check"></i>P8 Función de distribución</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p9-gráfico-de-dispersión"><i class="fa fa-check"></i>P9 Gráfico de dispersión</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p10-gráfico-de-dispersión"><i class="fa fa-check"></i>P10 Gráfico de dispersión</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html"><i class="fa fa-check"></i><b>6</b> Gráficos dinámicos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p1-gráficos-varios"><i class="fa fa-check"></i>P1 Gráficos varios</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p2-gráfico-de-barras-1"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p3-gráfico-de-barras"><i class="fa fa-check"></i>P3 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p4-gráfico-de-mancuernas"><i class="fa fa-check"></i>P4 Gráfico de mancuernas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p5-gráfico-de-lineas"><i class="fa fa-check"></i>P5 Gráfico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p6-gráfico-bitcoin"><i class="fa fa-check"></i>P6 Gráfico Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p7-precios-yahoofinance"><i class="fa fa-check"></i>P7 Precios YahooFinance</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p8-retornos-mensuales"><i class="fa fa-check"></i>P8 Retornos mensuales</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="mapas.html"><a href="mapas.html"><i class="fa fa-check"></i><b>7</b> Mapas</a></li>
+<li class="chapter" data-level="8" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html"><i class="fa fa-check"></i><b>8</b> Modelo de regresión lineal</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p2"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p3"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="modelos-de-probabilidad-lineal-probit-y-logit.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit.html"><i class="fa fa-check"></i><b>9</b> Modelos de probabilidad lineal, probit y logit</a></li>
+<li class="chapter" data-level="10" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><i class="fa fa-check"></i><b>10</b> Modelos de probabilidad lineal, probit y logit</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p1-1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p2-1"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p3-1"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Guía rápida para aprender R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="vectores-matrices-listas-y-data-frames" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Parte 2</span> Vectores, matrices, listas y data frames<a href="vectores-matrices-listas-y-data-frames.html#vectores-matrices-listas-y-data-frames" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="p1-vectores" class="section level2 unnumbered hasAnchor">
+<h2>P1 Vectores<a href="vectores-matrices-listas-y-data-frames.html#p1-vectores" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: lower-alpha">
+<li>Generar un vector que contenga la siguiente secuencia de números: <span class="math inline">\(1,2,3,4,...,10\)</span></li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="vectores-matrices-listas-y-data-frames.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">1</span>) <span class="co">#forma 1</span></span>
+<span id="cb1-2"><a href="vectores-matrices-listas-y-data-frames.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="co">#forma 2</span></span>
+<span id="cb1-3"><a href="vectores-matrices-listas-y-data-frames.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">10</span>) <span class="co">#forma 3</span></span>
+<span id="cb1-4"><a href="vectores-matrices-listas-y-data-frames.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>) <span class="co">#forma 4</span></span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Asigne el vector creado a <span class="math inline">\(x\)</span>, determine su tipo y dimensión</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="vectores-matrices-listas-y-data-frames.html#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="vectores-matrices-listas-y-data-frames.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x)</span>
+<span id="cb2-3"><a href="vectores-matrices-listas-y-data-frames.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(x)</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Calcule la suma y el producto de los elementos del vector <span class="math inline">\(x\)</span></li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="vectores-matrices-listas-y-data-frames.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x)</span>
+<span id="cb3-2"><a href="vectores-matrices-listas-y-data-frames.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prod</span>(x)</span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Calcule la suma acumulada y el producto acumulado de los elementos del vector <span class="math inline">\(x\)</span></li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="vectores-matrices-listas-y-data-frames.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(x)</span>
+<span id="cb4-2"><a href="vectores-matrices-listas-y-data-frames.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cumprod</span>(x)</span></code></pre></div>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Construya un vector lógico a partir de los elementos del vector x que son divisibles por 2 ¿Cuántos números son divisibles por 2? ¿Cuáles son divisibles por 2?</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="vectores-matrices-listas-y-data-frames.html#cb5-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb5-2"><a href="vectores-matrices-listas-y-data-frames.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb5-3"><a href="vectores-matrices-listas-y-data-frames.html#cb5-3" aria-hidden="true" tabindex="-1"></a>x[x <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>]</span></code></pre></div>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Genere el siguiente vector: “mes_1”, “mes_2”,. . . , “mes_10”</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="vectores-matrices-listas-y-data-frames.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;mes_&quot;</span>, x)</span></code></pre></div>
+</div>
+<div id="p2-vectores" class="section level2 unnumbered hasAnchor">
+<h2>P2 Vectores<a href="vectores-matrices-listas-y-data-frames.html#p2-vectores" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Genere un vector que repita roja cuatro veces y azul tres veces.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="vectores-matrices-listas-y-data-frames.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;roja&quot;</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">&quot;azul&quot;</span>, <span class="dv">3</span>)) <span class="co"># Forma 1</span></span>
+<span id="cb7-2"><a href="vectores-matrices-listas-y-data-frames.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;roja&quot;</span>, <span class="st">&quot;azul&quot;</span>), <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>)) <span class="co"># Forma 2</span></span></code></pre></div>
+</div>
+<div id="p3-tablas" class="section level2 unnumbered hasAnchor">
+<h2>P3 Tablas<a href="vectores-matrices-listas-y-data-frames.html#p3-tablas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Nombre
+</th>
+<th style="text-align:right;">
+Edad
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pedro
+</td>
+<td style="text-align:right;">
+17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ana
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maya
+</td>
+<td style="text-align:right;">
+23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Max
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paula
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li>A partir de esta tabla genere un vector <span class="math inline">\(x\)</span> con las edades de los estudiantes. Los nombres de cada uno de los elementos del vector deben ser los nombres de los estudiantes.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="vectores-matrices-listas-y-data-frames.html#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Pedro&quot;</span><span class="ot">=</span><span class="dv">17</span>, <span class="st">&quot;Ana&quot;</span><span class="ot">=</span><span class="cn">NA</span>, <span class="st">&quot;Maya&quot;</span><span class="ot">=</span><span class="dv">23</span>, <span class="st">&quot;Max&quot;</span><span class="ot">=</span><span class="cn">NA</span>, <span class="st">&quot;Paula&quot;</span><span class="ot">=</span><span class="dv">20</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Defina un vector <span class="math inline">\(y\)</span> que excluya los missing values (NA).</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="vectores-matrices-listas-y-data-frames.html#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> x[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)] <span class="co">#forma 1</span></span>
+<span id="cb9-2"><a href="vectores-matrices-listas-y-data-frames.html#cb9-2" aria-hidden="true" tabindex="-1"></a>y<span class="ot">=</span>x[<span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="sc">-</span><span class="dv">4</span>)] <span class="co"># forma 2</span></span>
+<span id="cb9-3"><a href="vectores-matrices-listas-y-data-frames.html#cb9-3" aria-hidden="true" tabindex="-1"></a>y<span class="ot">=</span>x[<span class="fu">c</span>(<span class="st">&quot;Pedro&quot;</span>,<span class="st">&quot;Maya&quot;</span>, <span class="st">&quot;Paula&quot;</span>)] <span class="co"># forma 3</span></span>
+<span id="cb9-4"><a href="vectores-matrices-listas-y-data-frames.html#cb9-4" aria-hidden="true" tabindex="-1"></a>y<span class="ot">=</span>x[<span class="sc">!</span><span class="fu">is.na</span>(x)] <span class="co"># forma 4</span></span>
+<span id="cb9-5"><a href="vectores-matrices-listas-y-data-frames.html#cb9-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">na.omit</span>(x) <span class="co"># forma 5</span></span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Asigne las edades de Pedro y Ana a un vector <span class="math inline">\(z\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="vectores-matrices-listas-y-data-frames.html#cb10-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> x[<span class="fu">c</span>(<span class="st">&quot;Pedro&quot;</span>,<span class="st">&quot;Ana&quot;</span>)] <span class="co">#forma 1</span></span>
+<span id="cb10-2"><a href="vectores-matrices-listas-y-data-frames.html#cb10-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> x[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)] <span class="co">#forma 2</span></span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Calcule la media aritmética de las edades de los 5 estudiantes usando la función mean y la fórmula para el cálculo de la media aritmética:</li>
+</ol>
+<p><span class="math display">\[
+\overline{x} = \frac{\sum^n_{i=1}x_i}{n}
+\]</span></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="vectores-matrices-listas-y-data-frames.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="co"># ¿Qué obtiene?</span></span>
+<span id="cb11-2"><a href="vectores-matrices-listas-y-data-frames.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co">#forma 1</span></span>
+<span id="cb11-3"><a href="vectores-matrices-listas-y-data-frames.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x[<span class="sc">!</span><span class="fu">is.na</span>(x)])<span class="sc">/</span><span class="fu">length</span>(x[<span class="sc">!</span><span class="fu">is.na</span>(x)]) <span class="co">#forma 2</span></span></code></pre></div>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Calcule la desviación estándar de las edades de los 5 estudiantes usando la función sd y la fórmula para el cálculo de la desviación estándar:</li>
+</ol>
+<p><span class="math display">\[
+s = \sqrt{\frac{\sum^n_{i=1}(x_i-\overline{x})^2}{n-1}}
+\]</span></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="vectores-matrices-listas-y-data-frames.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># Forma 1</span></span>
+<span id="cb12-2"><a href="vectores-matrices-listas-y-data-frames.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">sum</span>((x[<span class="sc">!</span><span class="fu">is.na</span>(x)]<span class="sc">-</span><span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="fu">length</span>(x[<span class="sc">!</span><span class="fu">is.na</span>(x)]) <span class="sc">-</span> <span class="dv">1</span>)) <span class="co"># Forma 2</span></span>
+<span id="cb12-3"><a href="vectores-matrices-listas-y-data-frames.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">sum</span>((<span class="fu">na.omit</span>(x)<span class="sc">-</span><span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="fu">length</span>(<span class="fu">na.omit</span>(x)) <span class="sc">-</span> <span class="dv">1</span>)) <span class="co"># Forma 3</span></span></code></pre></div>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>Calcule la proporción de estudiantes que tienen 20 años o menos.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="vectores-matrices-listas-y-data-frames.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x<span class="sc">&lt;=</span><span class="dv">20</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ol start="8" style="list-style-type: lower-alpha">
+<li>Calcule el promedio de edad de los estudiantes cuyas edades son 20 años o menos.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="vectores-matrices-listas-y-data-frames.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[x<span class="sc">&lt;=</span><span class="dv">20</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co">#Forma 1</span></span>
+<span id="cb14-2"><a href="vectores-matrices-listas-y-data-frames.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[<span class="fu">which</span>(x<span class="sc">&lt;=</span><span class="dv">20</span>)]) <span class="co"># Forma 2</span></span></code></pre></div>
+<ol style="list-style-type: lower-roman">
+<li>Escriba summary(x) en el script ¿Qué obtiene?</li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="vectores-matrices-listas-y-data-frames.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(x)</span></code></pre></div>
+</div>
+<div id="p4-tasa-crecimiento" class="section level2 unnumbered hasAnchor">
+<h2>P4 Tasa crecimiento<a href="vectores-matrices-listas-y-data-frames.html#p4-tasa-crecimiento" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Calcule la tasa de crecimiento promedio anual del PIB si las tasas son: 20% y −20%</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="vectores-matrices-listas-y-data-frames.html#cb16-1" aria-hidden="true" tabindex="-1"></a> r_g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>,<span class="sc">-</span><span class="dv">20</span>)</span>
+<span id="cb16-2"><a href="vectores-matrices-listas-y-data-frames.html#cb16-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">+</span> r_g<span class="sc">/</span><span class="dv">100</span>)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">length</span>(r_g)) <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span></span></code></pre></div>
+</div>
+<div id="p5-tasa-crecimiento" class="section level2 unnumbered hasAnchor">
+<h2>P5 Tasa crecimiento<a href="vectores-matrices-listas-y-data-frames.html#p5-tasa-crecimiento" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Si una variable crece a un <span class="math inline">\(x%\)</span> por período, construya una fórmula que le permita obtener el número de períodos para que la variable duplique su valor. Calcule el número de períodos si las tasas de crecimiento son 4%, 6%, 8% y 10%.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="vectores-matrices-listas-y-data-frames.html#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>)</span>
+<span id="cb17-2"><a href="vectores-matrices-listas-y-data-frames.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="fu">log</span>(<span class="dv">1</span><span class="sc">+</span>(x<span class="sc">/</span><span class="dv">100</span>))</span></code></pre></div>
+</div>
+<div id="p6-valor-presente" class="section level2 unnumbered hasAnchor">
+<h2>P6 Valor presente<a href="vectores-matrices-listas-y-data-frames.html#p6-valor-presente" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: lower-alpha">
+<li>Calcule el valor presente de un flujo de efectivo de $1000 por un total de diez períodos. Asuma una tasa de descuento de 10%.</li>
+</ol>
+<p>El valor presente <span class="math inline">\((VP)\)</span> es igual a:</p>
+<p><span class="math display">\[
+VP = \sum^{T}_{t=1}\frac{F_t}{(1+r)^t} = \sum^{T}_{t=1}F_t\times (1+r)^{-t}
+\]</span></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="vectores-matrices-listas-y-data-frames.html#cb18-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> <span class="fl">0.1</span> <span class="co">#tasa de descuento</span></span>
+<span id="cb18-2"><a href="vectores-matrices-listas-y-data-frames.html#cb18-2" aria-hidden="true" tabindex="-1"></a>flujo_efectivo <span class="ot">=</span> <span class="dv">1000</span> <span class="co">#flujo por período</span></span>
+<span id="cb18-3"><a href="vectores-matrices-listas-y-data-frames.html#cb18-3" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="dv">10</span></span>
+<span id="cb18-4"><a href="vectores-matrices-listas-y-data-frames.html#cb18-4" aria-hidden="true" tabindex="-1"></a>periodo <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span>n <span class="co">#períodos</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="vectores-matrices-listas-y-data-frames.html#cb19-1" aria-hidden="true" tabindex="-1"></a>valor_presente <span class="ot">&lt;-</span> <span class="fu">sum</span>(flujo_efectivo <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> r) <span class="sc">^</span> <span class="sc">-</span>periodo)</span>
+<span id="cb19-2"><a href="vectores-matrices-listas-y-data-frames.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Valor Presente&quot;</span>, <span class="st">&quot;=&quot;</span>,<span class="st">&quot;$&quot;</span>, <span class="fu">round</span>(valor_presente,<span class="dv">0</span>)) <span class="co">#forma 1</span></span>
+<span id="cb19-3"><a href="vectores-matrices-listas-y-data-frames.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Valor Presente&quot;</span>, <span class="st">&quot;=&quot;</span>,<span class="st">&quot;$&quot;</span>, <span class="fu">round</span>((flujo_efectivo<span class="sc">/</span>r)<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">+</span> r)<span class="sc">^-</span>n),<span class="dv">0</span>)) <span class="co">#forma 2</span></span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Calcule el valor presente neto de un flujo de efectivo de $300, $1200, $1000 y una inversión inicial de $900. Asuma que las tasas de descuento para cada uno de los períodos son 10%, 20%, 15%, respectivamente.</li>
+</ol>
+<p><span class="math display">\[
+VPN = -900+\frac{100}{1.1}+\frac{1200}{1.1\times 1.2}+ \frac{1000}{1.1\times 1.2\times 1.15} = 940.58
+\]</span></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="vectores-matrices-listas-y-data-frames.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tasa de interés</span></span>
+<span id="cb20-2"><a href="vectores-matrices-listas-y-data-frames.html#cb20-2" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
+<span id="cb20-3"><a href="vectores-matrices-listas-y-data-frames.html#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="vectores-matrices-listas-y-data-frames.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Factores de descuento</span></span>
+<span id="cb20-5"><a href="vectores-matrices-listas-y-data-frames.html#cb20-5" aria-hidden="true" tabindex="-1"></a>yearly_discount_factors <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">+</span> r) <span class="sc">^</span> <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb20-6"><a href="vectores-matrices-listas-y-data-frames.html#cb20-6" aria-hidden="true" tabindex="-1"></a>yearly_discount_factors</span>
+<span id="cb20-7"><a href="vectores-matrices-listas-y-data-frames.html#cb20-7" aria-hidden="true" tabindex="-1"></a>discount_factors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span> , <span class="fu">cumprod</span>(yearly_discount_factors))</span>
+<span id="cb20-8"><a href="vectores-matrices-listas-y-data-frames.html#cb20-8" aria-hidden="true" tabindex="-1"></a>discount_factors</span>
+<span id="cb20-9"><a href="vectores-matrices-listas-y-data-frames.html#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="vectores-matrices-listas-y-data-frames.html#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir vector de flujos</span></span>
+<span id="cb20-11"><a href="vectores-matrices-listas-y-data-frames.html#cb20-11" aria-hidden="true" tabindex="-1"></a>cash_flow <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">900</span>, <span class="dv">300</span>, <span class="dv">1200</span>, <span class="dv">1000</span>)</span>
+<span id="cb20-12"><a href="vectores-matrices-listas-y-data-frames.html#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="vectores-matrices-listas-y-data-frames.html#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular valor presente</span></span>
+<span id="cb20-14"><a href="vectores-matrices-listas-y-data-frames.html#cb20-14" aria-hidden="true" tabindex="-1"></a>VPN <span class="ot">&lt;-</span> <span class="fu">sum</span>(cash_flow <span class="sc">*</span> discount_factors)</span>
+<span id="cb20-15"><a href="vectores-matrices-listas-y-data-frames.html#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Valor Presente Neto&quot;</span>, <span class="st">&quot;=&quot;</span>,<span class="st">&quot;$&quot;</span>, <span class="fu">round</span>(VPN,<span class="dv">0</span>))</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Calcule el número de períodos en que se recupera la inversión (payback period) del flujo de efectivo de $300, $1200, $1000 y una inversión inicial de $900.</li>
+</ol>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="vectores-matrices-listas-y-data-frames.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Payback period = &quot;</span>, <span class="fu">min</span>(<span class="fu">which</span>(<span class="fu">cumsum</span>(cash_flow) <span class="sc">&gt;=</span> <span class="dv">0</span>)) <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div id="p7-muestras" class="section level2 unnumbered hasAnchor">
+<h2>P7 Muestras<a href="vectores-matrices-listas-y-data-frames.html#p7-muestras" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><span class="math display">\[\begin{align*}
+skewness &amp;= \frac{\frac{\sum^n_{i=1}(x_i-\overline{x})^3}{n}}{\left[\frac{\sum^n_{i=1}(x_i-\overline{x})^2}{n}  \right]^{\frac{3}{2}}}\\
+kurtosis &amp;= \frac{\frac{\sum^n_{i=1}(x_i-\overline{x})^4}{n}}{\left[\frac{\sum^n_{i=1}(x_i-\overline{x})^2}{n}  \right]^{2}}\\
+\end{align*}\]</span></p>
+<p>Genere una muestra de 10000 números aleatorios provenientes de la distribución normal estándar y calcule la skewness y kurtosis, usando las siguientes fórmulas:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="vectores-matrices-listas-y-data-frames.html#cb22-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>)</span>
+<span id="cb22-2"><a href="vectores-matrices-listas-y-data-frames.html#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="vectores-matrices-listas-y-data-frames.html#cb22-3" aria-hidden="true" tabindex="-1"></a>skewness <span class="ot">&lt;-</span> (<span class="fu">sum</span>((z <span class="sc">-</span> <span class="fu">mean</span>(z))<span class="sc">^</span><span class="dv">3</span>)<span class="sc">/</span><span class="fu">length</span>(z))<span class="sc">/</span>(<span class="fu">sum</span>((z <span class="sc">-</span> <span class="fu">mean</span>(z))<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">length</span>(z))<span class="sc">^</span><span class="fl">1.5</span></span>
+<span id="cb22-4"><a href="vectores-matrices-listas-y-data-frames.html#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="vectores-matrices-listas-y-data-frames.html#cb22-5" aria-hidden="true" tabindex="-1"></a>kurtosis <span class="ot">&lt;-</span> (<span class="fu">sum</span>((z <span class="sc">-</span> <span class="fu">mean</span>(z))<span class="sc">^</span><span class="dv">4</span>)<span class="sc">/</span><span class="fu">length</span>(z))<span class="sc">/</span>(<span class="fu">sum</span>((z <span class="sc">-</span> <span class="fu">mean</span>(z))<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="fu">length</span>(z))<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb22-6"><a href="vectores-matrices-listas-y-data-frames.html#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="vectores-matrices-listas-y-data-frames.html#cb22-7" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">skewness</span>(z)</span>
+<span id="cb22-8"><a href="vectores-matrices-listas-y-data-frames.html#cb22-8" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">kurtosis</span>(z)</span></code></pre></div>
+</div>
+<div id="p8-matrices" class="section level2 unnumbered hasAnchor">
+<h2>P8 Matrices<a href="vectores-matrices-listas-y-data-frames.html#p8-matrices" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sea X una matriz :
+<span class="math display">\[
+X = \begin{bmatrix}
+0 &amp; 10 &amp; -5\\
+5 &amp; 8 &amp; -4\\
+0 &amp; 1 &amp; -1
+\end{bmatrix}
+\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li>Construya la matriz X y asigne nombres a sus filas y columnas.</li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="vectores-matrices-listas-y-data-frames.html#cb23-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="sc">-</span><span class="dv">5</span>)</span>
+<span id="cb23-2"><a href="vectores-matrices-listas-y-data-frames.html#cb23-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">8</span>,<span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb23-3"><a href="vectores-matrices-listas-y-data-frames.html#cb23-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb23-4"><a href="vectores-matrices-listas-y-data-frames.html#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="vectores-matrices-listas-y-data-frames.html#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="vectores-matrices-listas-y-data-frames.html#cb23-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rbind</span>(a,b,c) <span class="co"># Forma 1</span></span>
+<span id="cb23-7"><a href="vectores-matrices-listas-y-data-frames.html#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;fila1&quot;</span>, <span class="st">&quot;fila2&quot;</span>, <span class="st">&quot;fila3&quot;</span>)</span>
+<span id="cb23-8"><a href="vectores-matrices-listas-y-data-frames.html#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;columna1&quot;</span>, <span class="st">&quot;columna2&quot;</span>, <span class="st">&quot;columna3&quot;</span>)</span>
+<span id="cb23-9"><a href="vectores-matrices-listas-y-data-frames.html#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="vectores-matrices-listas-y-data-frames.html#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">8</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="sc">-</span><span class="dv">4</span>,<span class="sc">-</span><span class="dv">1</span>)) <span class="co"># Forma 2</span></span>
+<span id="cb23-11"><a href="vectores-matrices-listas-y-data-frames.html#cb23-11" aria-hidden="true" tabindex="-1"></a>e <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>,<span class="dv">8</span>,<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb23-12"><a href="vectores-matrices-listas-y-data-frames.html#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(e, <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>) <span class="co"># Forma 3</span></span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Almacene la segunda fila de X en el vector <span class="math inline">\(z\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="vectores-matrices-listas-y-data-frames.html#cb24-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> X[<span class="dv">2</span>,]</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Almacene los elementos (2, 3) y (3, 3) en el vector <span class="math inline">\(w\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="vectores-matrices-listas-y-data-frames.html#cb25-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> X[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>]</span></code></pre></div>
+</div>
+<div id="p9-listas" class="section level2 unnumbered hasAnchor">
+<h2>P9 Listas<a href="vectores-matrices-listas-y-data-frames.html#p9-listas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: lower-alpha">
+<li>Genere una lista que consista del vector a igual a {8, 12, 16,. . . , 36}, un vector b que contenga las palabras hola y ¿Cómo estás? y un elemento c que contiene el número 5.</li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="vectores-matrices-listas-y-data-frames.html#cb26-1" aria-hidden="true" tabindex="-1"></a>lista_A <span class="ot">=</span> <span class="fu">list</span>(<span class="at">a=</span><span class="fu">seq</span>(<span class="dv">8</span>, <span class="dv">36</span>, <span class="dv">4</span>), <span class="at">b=</span><span class="fu">list</span>(<span class="st">&quot;hola&quot;</span>,<span class="st">&quot;¿Cómo estás?&quot;</span>), <span class="at">c =</span> <span class="dv">5</span>)</span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Obtenga el primer elemento de la lista.</li>
+</ol>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="vectores-matrices-listas-y-data-frames.html#cb27-1" aria-hidden="true" tabindex="-1"></a>lista_A[[<span class="st">&quot;a&quot;</span>]] <span class="co"># Forma 1</span></span>
+<span id="cb27-2"><a href="vectores-matrices-listas-y-data-frames.html#cb27-2" aria-hidden="true" tabindex="-1"></a>lista_A<span class="sc">$</span>a <span class="co"># Forma 2</span></span>
+<span id="cb27-3"><a href="vectores-matrices-listas-y-data-frames.html#cb27-3" aria-hidden="true" tabindex="-1"></a>lista_A[<span class="st">&quot;a&quot;</span>] <span class="co"># Forma 3</span></span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Obtenga los primeros dos elementos de la lista.</li>
+</ol>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="vectores-matrices-listas-y-data-frames.html#cb28-1" aria-hidden="true" tabindex="-1"></a>lista_A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Asigne “¿Cómo estás?” a s</li>
+</ol>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="vectores-matrices-listas-y-data-frames.html#cb29-1" aria-hidden="true" tabindex="-1"></a>lista_A[[<span class="st">&quot;b&quot;</span>]][<span class="dv">2</span>] <span class="co"># Forma 1</span></span>
+<span id="cb29-2"><a href="vectores-matrices-listas-y-data-frames.html#cb29-2" aria-hidden="true" tabindex="-1"></a>lista_A[[<span class="st">&quot;b&quot;</span>]][[<span class="dv">2</span>]] <span class="co"># Forma 2</span></span></code></pre></div>
+</div>
+<div id="p10-manipulación" class="section level2 unnumbered hasAnchor">
+<h2>P10 Manipulación<a href="vectores-matrices-listas-y-data-frames.html#p10-manipulación" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La siguiente tabla presenta la distribución por zona de una muestra, separando entre hombres y mujeres:</p>
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+zona
+</th>
+<th style="text-align:right;">
+hombres
+</th>
+<th style="text-align:right;">
+mujeres
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:right;">
+800
+</td>
+<td style="text-align:right;">
+700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:right;">
+600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D
+</td>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+400
+</td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li>Construya dicha tabla como un data frame.</li>
+</ol>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="vectores-matrices-listas-y-data-frames.html#cb30-1" aria-hidden="true" tabindex="-1"></a>zona <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>)</span>
+<span id="cb30-2"><a href="vectores-matrices-listas-y-data-frames.html#cb30-2" aria-hidden="true" tabindex="-1"></a>hombres <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">800</span>,<span class="dv">200</span>,<span class="dv">700</span>,<span class="dv">300</span>)</span>
+<span id="cb30-3"><a href="vectores-matrices-listas-y-data-frames.html#cb30-3" aria-hidden="true" tabindex="-1"></a>mujeres <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">700</span>,<span class="dv">300</span>,<span class="dv">600</span>,<span class="dv">400</span>)</span>
+<span id="cb30-4"><a href="vectores-matrices-listas-y-data-frames.html#cb30-4" aria-hidden="true" tabindex="-1"></a>muestra_total_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(zona, hombres, mujeres) <span class="co"># dataframe</span></span></code></pre></div>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Construya dicha tabla como un tibble.</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="vectores-matrices-listas-y-data-frames.html#cb31-1" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">zona =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>),</span>
+<span id="cb31-2"><a href="vectores-matrices-listas-y-data-frames.html#cb31-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">hombres =</span> <span class="fu">c</span>(<span class="dv">800</span>,<span class="dv">200</span>,<span class="dv">700</span>,<span class="dv">300</span>),</span>
+<span id="cb31-3"><a href="vectores-matrices-listas-y-data-frames.html#cb31-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">mujeres =</span> <span class="fu">c</span>(<span class="dv">700</span>,<span class="dv">300</span>,<span class="dv">600</span>,<span class="dv">400</span>))</span></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Escriba en el script <span class="math inline">\(summary(muestra_total_tb)\)</span> ¿Qué obtiene?</li>
+</ol>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="vectores-matrices-listas-y-data-frames.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(muestra_total_tb)</span></code></pre></div>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Escriba en el script <span class="math inline">\(str(muestra_total_tb)\)</span> y <span class="math inline">\(dplyr::glimpse(muestra_total_tb)\)</span> ¿Qué obtiene?</li>
+</ol>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="vectores-matrices-listas-y-data-frames.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(muestra_total_tb)</span>
+<span id="cb33-2"><a href="vectores-matrices-listas-y-data-frames.html#cb33-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(muestra_total_tb)</span></code></pre></div>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Presente las primeras tres y últimas dos observaciones del <span class="math inline">\(muestra_total_tb\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="vectores-matrices-listas-y-data-frames.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb34-2"><a href="vectores-matrices-listas-y-data-frames.html#cb34-2" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">3</span>)</span>
+<span id="cb34-3"><a href="vectores-matrices-listas-y-data-frames.html#cb34-3" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">slice_tail</span>(<span class="at">n =</span> <span class="dv">2</span>)</span></code></pre></div>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Extraer la columna <span class="math inline">\(mujeres\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="vectores-matrices-listas-y-data-frames.html#cb35-1" aria-hidden="true" tabindex="-1"></a>muestra_total_tb<span class="sc">$</span>mujeres <span class="co"># Forma 1</span></span>
+<span id="cb35-2"><a href="vectores-matrices-listas-y-data-frames.html#cb35-2" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mujeres) <span class="co"># Forma 2</span></span></code></pre></div>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>Construya una tabla con las observaciones de las variables <span class="math inline">\(zona\)</span> y <span class="math inline">\(mujeres\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="vectores-matrices-listas-y-data-frames.html#cb36-1" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>hombres) <span class="co"># forma 1</span></span>
+<span id="cb36-2"><a href="vectores-matrices-listas-y-data-frames.html#cb36-2" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">select</span>(zona, mujeres) <span class="co"># forma 2</span></span></code></pre></div>
+<ol start="8" style="list-style-type: lower-alpha">
+<li>Construya una tabla con las muestras de las zonas <span class="math inline">\(A\)</span> y <span class="math inline">\(C\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="vectores-matrices-listas-y-data-frames.html#cb37-1" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(zona<span class="sc">==</span><span class="st">&quot;A&quot;</span> <span class="sc">|</span> zona<span class="sc">==</span><span class="st">&quot;C&quot;</span>) <span class="co"># Forma 1</span></span>
+<span id="cb37-2"><a href="vectores-matrices-listas-y-data-frames.html#cb37-2" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(zona <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>)) <span class="co"># Forma 2</span></span></code></pre></div>
+<ol style="list-style-type: lower-roman">
+<li>Construya una variable <span class="math inline">\(muestra_total\)</span> que sea igual a la suma de <span class="math inline">\(hombres\)</span> y <span class="math inline">\(mujeres\)</span> y una variable <span class="math inline">\(prop_muestra\)</span> que representa la proporción de la muestra total de una determinada región.</li>
+</ol>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="vectores-matrices-listas-y-data-frames.html#cb38-1" aria-hidden="true" tabindex="-1"></a>muestra_total_tb <span class="ot">&lt;-</span> muestra_total_tb <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="vectores-matrices-listas-y-data-frames.html#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mayor =</span> <span class="fu">if_else</span>(muestra_total <span class="sc">&gt;</span> <span class="dv">1000</span>, <span class="st">&quot;alto&quot;</span>, <span class="st">&quot;bajo&quot;</span>))</span>
+<span id="cb38-3"><a href="vectores-matrices-listas-y-data-frames.html#cb38-3" aria-hidden="true" tabindex="-1"></a>muestra_total_tb</span></code></pre></div>
+<ol start="10" style="list-style-type: lower-alpha">
+<li>Genere una variable que toma el valor “alto” si la muestra total de una zona determinada es mayor a 1000 e igual a “bajo”, si no son mayores.</li>
+</ol>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="vectores-matrices-listas-y-data-frames.html#cb39-1" aria-hidden="true" tabindex="-1"></a> muestra_total_tb <span class="ot">&lt;-</span> muestra_total_tb <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="vectores-matrices-listas-y-data-frames.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mayor =</span> <span class="fu">if_else</span>(muestra_total <span class="sc">&gt;</span> <span class="dv">1000</span>, <span class="st">&quot;alto&quot;</span>, <span class="st">&quot;bajo&quot;</span>))</span>
+<span id="cb39-3"><a href="vectores-matrices-listas-y-data-frames.html#cb39-3" aria-hidden="true" tabindex="-1"></a>muestra_total_tb</span></code></pre></div>
+<ol start="11" style="list-style-type: lower-alpha">
+<li>Guarde muestra_total_tb con extensión <span class="math inline">\(.csv\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="vectores-matrices-listas-y-data-frames.html#cb40-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(muestra_total_tb, <span class="at">file =</span> <span class="st">&quot;datos/muestra_total.csv&quot;</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="importación-de-datos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection",
+"toc_depth": 6,
+"toc_float": null
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

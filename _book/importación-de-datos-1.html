@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Parte 4 Importación de datos | Guía rápida para aprender R</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Parte 4 Importación de datos | Guía rápida para aprender R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Parte 4 Importación de datos | Guía rápida para aprender R" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Constanza Zepeda" />
+
+
+<meta name="date" content="2022-06-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="importación-de-datos.html"/>
+<link rel="next" href="gráficos-estáticos.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html"><i class="fa fa-check"></i><b>2</b> Vectores, matrices, listas y data frames</a>
+<ul>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p1-vectores"><i class="fa fa-check"></i>P1 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p2-vectores"><i class="fa fa-check"></i>P2 Vectores</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p3-tablas"><i class="fa fa-check"></i>P3 Tablas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p4-tasa-crecimiento"><i class="fa fa-check"></i>P4 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p5-tasa-crecimiento"><i class="fa fa-check"></i>P5 Tasa crecimiento</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p6-valor-presente"><i class="fa fa-check"></i>P6 Valor presente</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p7-muestras"><i class="fa fa-check"></i>P7 Muestras</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p8-matrices"><i class="fa fa-check"></i>P8 Matrices</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p9-listas"><i class="fa fa-check"></i>P9 Listas</a></li>
+<li class="chapter" data-level="" data-path="vectores-matrices-listas-y-data-frames.html"><a href="vectores-matrices-listas-y-data-frames.html#p10-manipulación"><i class="fa fa-check"></i>P10 Manipulación</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importación-de-datos.html"><a href="importación-de-datos.html"><i class="fa fa-check"></i><b>3</b> Importación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p1-importar-datos"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p2-retorno"><i class="fa fa-check"></i>P2 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p3-retorno"><i class="fa fa-check"></i>P3 Retorno</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p4-bitcoin"><i class="fa fa-check"></i>P4 Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p5-farmacias"><i class="fa fa-check"></i>P5 Farmacias</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos.html"><a href="importación-de-datos.html#p6-poblacion"><i class="fa fa-check"></i>P6 Poblacion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html"><i class="fa fa-check"></i><b>4</b> Importación de datos</a>
+<ul>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p1-importar-datos-1"><i class="fa fa-check"></i>P1 Importar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p2-nombrar-variables"><i class="fa fa-check"></i>P2 Nombrar variables</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p3-ordenar-datos"><i class="fa fa-check"></i>P3 Ordenar datos</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p4-cambiar-nombres"><i class="fa fa-check"></i>P4 Cambiar nombres</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p5-contar"><i class="fa fa-check"></i>P5 Contar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p6-identificar"><i class="fa fa-check"></i>P6 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p7-identificar"><i class="fa fa-check"></i>P7 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p8-identificar"><i class="fa fa-check"></i>P8 Identificar</a></li>
+<li class="chapter" data-level="" data-path="importación-de-datos-1.html"><a href="importación-de-datos-1.html#p9-estadística-descriptiva"><i class="fa fa-check"></i>P9 Estadística descriptiva</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html"><i class="fa fa-check"></i><b>5</b> Gráficos estáticos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p1-grafico-de-lineas"><i class="fa fa-check"></i>P1 Grafico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p2-gráfico-de-barras"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p3-gráfico-de-torta"><i class="fa fa-check"></i>P3 Gráfico de torta</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p4-gráfico-de-barras"><i class="fa fa-check"></i>P4 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p5-gráfico"><i class="fa fa-check"></i>P5 Gráfico</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p6-gráfico-de-cajas"><i class="fa fa-check"></i>P6 Gráfico de cajas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p7-histograma"><i class="fa fa-check"></i>P7 Histograma</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p8-función-de-distribución"><i class="fa fa-check"></i>P8 Función de distribución</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p9-gráfico-de-dispersión"><i class="fa fa-check"></i>P9 Gráfico de dispersión</a></li>
+<li class="chapter" data-level="" data-path="gráficos-estáticos.html"><a href="gráficos-estáticos.html#p10-gráfico-de-dispersión"><i class="fa fa-check"></i>P10 Gráfico de dispersión</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html"><i class="fa fa-check"></i><b>6</b> Gráficos dinámicos</a>
+<ul>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p1-gráficos-varios"><i class="fa fa-check"></i>P1 Gráficos varios</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p2-gráfico-de-barras-1"><i class="fa fa-check"></i>P2 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p3-gráfico-de-barras"><i class="fa fa-check"></i>P3 Gráfico de barras</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p4-gráfico-de-mancuernas"><i class="fa fa-check"></i>P4 Gráfico de mancuernas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p5-gráfico-de-lineas"><i class="fa fa-check"></i>P5 Gráfico de lineas</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p6-gráfico-bitcoin"><i class="fa fa-check"></i>P6 Gráfico Bitcoin</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p7-precios-yahoofinance"><i class="fa fa-check"></i>P7 Precios YahooFinance</a></li>
+<li class="chapter" data-level="" data-path="gráficos-dinámicos.html"><a href="gráficos-dinámicos.html#p8-retornos-mensuales"><i class="fa fa-check"></i>P8 Retornos mensuales</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="mapas.html"><a href="mapas.html"><i class="fa fa-check"></i><b>7</b> Mapas</a></li>
+<li class="chapter" data-level="8" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html"><i class="fa fa-check"></i><b>8</b> Modelo de regresión lineal</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p2"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-regresión-lineal.html"><a href="modelo-de-regresión-lineal.html#p3"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="modelos-de-probabilidad-lineal-probit-y-logit.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit.html"><i class="fa fa-check"></i><b>9</b> Modelos de probabilidad lineal, probit y logit</a></li>
+<li class="chapter" data-level="10" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><i class="fa fa-check"></i><b>10</b> Modelos de probabilidad lineal, probit y logit</a>
+<ul>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p1-1"><i class="fa fa-check"></i>P1</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p2-1"><i class="fa fa-check"></i>P2</a></li>
+<li class="chapter" data-level="" data-path="modelos-de-probabilidad-lineal-probit-y-logit-1.html"><a href="modelos-de-probabilidad-lineal-probit-y-logit-1.html#p3-1"><i class="fa fa-check"></i>P3</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Guía rápida para aprender R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="importación-de-datos-1" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Parte 4</span> Importación de datos<a href="importación-de-datos-1.html#importación-de-datos-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="importación-de-datos-1.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WDI)</span>
+<span id="cb48-2"><a href="importación-de-datos-1.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb48-3"><a href="importación-de-datos-1.html#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb48-4"><a href="importación-de-datos-1.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb48-5"><a href="importación-de-datos-1.html#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb48-6"><a href="importación-de-datos-1.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code></pre></div>
+<div id="p1-importar-datos-1" class="section level2 unnumbered hasAnchor">
+<h2>P1 Importar datos<a href="importación-de-datos-1.html#p1-importar-datos-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Obtenga los datos contenidos en el archivo wbData_1960_2020.rds</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="importación-de-datos-1.html#cb49-1" aria-hidden="true" tabindex="-1"></a>wbData1 <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;datos/wbData_1960_2020.rds&quot;</span>)</span></code></pre></div>
+</div>
+<div id="p2-nombrar-variables" class="section level2 unnumbered hasAnchor">
+<h2>P2 Nombrar variables<a href="importación-de-datos-1.html#p2-nombrar-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nombre a las variables SP.POP.TOTL, NY.GDP.PCAP.PP.CD, SP.DYN.LE00.IN y SI.POV.GINI como population, gdppc, lifeexpectancy y gini respectivamente.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="importación-de-datos-1.html#cb50-1" aria-hidden="true" tabindex="-1"></a>wbData2 <span class="ot">&lt;-</span> wbData1 <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">population=</span> SP.POP.TOTL,</span>
+<span id="cb50-2"><a href="importación-de-datos-1.html#cb50-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">gdppc =</span> NY.GDP.PCAP.PP.CD,</span>
+<span id="cb50-3"><a href="importación-de-datos-1.html#cb50-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">life_expectancy =</span> SP.DYN.LE00.IN,</span>
+<span id="cb50-4"><a href="importación-de-datos-1.html#cb50-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">gini =</span> SI.POV.GINI)</span></code></pre></div>
+</div>
+<div id="p3-ordenar-datos" class="section level2 unnumbered hasAnchor">
+<h2>P3 Ordenar datos<a href="importación-de-datos-1.html#p3-ordenar-datos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="importación-de-datos-1.html#cb51-1" aria-hidden="true" tabindex="-1"></a>wbData2 <span class="ot">&lt;-</span> wbData2 <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(country, year)</span></code></pre></div>
+</div>
+<div id="p4-cambiar-nombres" class="section level2 unnumbered hasAnchor">
+<h2>P4 Cambiar nombres<a href="importación-de-datos-1.html#p4-cambiar-nombres" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Cambie los nombres de las regiones a español. Por ejemplo, cambie la región “Middle East &amp; North Africa” a “Medio Oriente y Norte de Africa”.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="importación-de-datos-1.html#cb52-1" aria-hidden="true" tabindex="-1"></a>wbData2 <span class="ot">&lt;-</span> wbData2 <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="importación-de-datos-1.html#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">recode</span>(region,</span>
+<span id="cb52-3"><a href="importación-de-datos-1.html#cb52-3" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;East Asia &amp; Pacific&quot;</span> <span class="ot">=</span> <span class="st">&quot;Este Asiático y Pacífico&quot;</span>,</span>
+<span id="cb52-4"><a href="importación-de-datos-1.html#cb52-4" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;Europe &amp; Central Asia&quot;</span> <span class="ot">=</span> <span class="st">&quot;Europa y Asia Central&quot;</span> ,</span>
+<span id="cb52-5"><a href="importación-de-datos-1.html#cb52-5" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;Latin America &amp; Caribbean&quot;</span> <span class="ot">=</span> <span class="st">&quot;América Latina y el Caribe&quot;</span>,</span>
+<span id="cb52-6"><a href="importación-de-datos-1.html#cb52-6" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;Middle East &amp; North Africa&quot;</span> <span class="ot">=</span> <span class="st">&quot;Medio Oriente y Norte de Africa&quot;</span>,</span>
+<span id="cb52-7"><a href="importación-de-datos-1.html#cb52-7" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;North America&quot;</span> <span class="ot">=</span> <span class="st">&quot;Norteamérica&quot;</span>,</span>
+<span id="cb52-8"><a href="importación-de-datos-1.html#cb52-8" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;South Asia&quot;</span> <span class="ot">=</span> <span class="st">&quot;Asia del Sur&quot;</span>,</span>
+<span id="cb52-9"><a href="importación-de-datos-1.html#cb52-9" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;Sub-Saharan Africa&quot;</span> <span class="ot">=</span> <span class="st">&quot;Africa Subsahariana&quot;</span>))</span></code></pre></div>
+</div>
+<div id="p5-contar" class="section level2 unnumbered hasAnchor">
+<h2>P5 Contar<a href="importación-de-datos-1.html#p5-contar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>¿Cuántos países tiene la base de datos?, ¿Cuántos países por región tiene la base de datos?</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="importación-de-datos-1.html#cb53-1" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="ot">&lt;-</span> wbData2 <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="importación-de-datos-1.html#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">!=</span> <span class="st">&quot;Aggregates&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="importación-de-datos-1.html#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">droplevels</span>()</span>
+<span id="cb53-4"><a href="importación-de-datos-1.html#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Número de países</span></span>
+<span id="cb53-5"><a href="importación-de-datos-1.html#cb53-5" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(country) <span class="sc">%&gt;%</span> <span class="fu">count</span>()</span>
+<span id="cb53-6"><a href="importación-de-datos-1.html#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Número de países por región</span></span>
+<span id="cb53-7"><a href="importación-de-datos-1.html#cb53-7" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(country) <span class="sc">%&gt;%</span></span>
+<span id="cb53-8"><a href="importación-de-datos-1.html#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb53-9"><a href="importación-de-datos-1.html#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop_region =</span> <span class="fu">round</span>((n<span class="sc">/</span><span class="fu">sum</span>(n))<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb53-10"><a href="importación-de-datos-1.html#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">&quot;row&quot;</span>)</span></code></pre></div>
+</div>
+<div id="p6-identificar" class="section level2 unnumbered hasAnchor">
+<h2>P6 Identificar<a href="importación-de-datos-1.html#p6-identificar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Identifique los 10 países con mayor crecimiento de su población entre los años 2018 y 2019.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="importación-de-datos-1.html#cb54-1" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="importación-de-datos-1.html#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">crecim_poblacional =</span> <span class="fu">round</span>(((population <span class="sc">-</span><span class="fu">lag</span>(population))<span class="sc">/</span><span class="fu">lag</span>(population))<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="importación-de-datos-1.html#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb54-4"><a href="importación-de-datos-1.html#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2019</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="importación-de-datos-1.html#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, crecim_poblacional) <span class="sc">%&gt;%</span></span>
+<span id="cb54-6"><a href="importación-de-datos-1.html#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(crecim_poblacional, <span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div>
+</div>
+<div id="p7-identificar" class="section level2 unnumbered hasAnchor">
+<h2>P7 Identificar<a href="importación-de-datos-1.html#p7-identificar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Identifique los 10 países con menor PIB per cápita el año 2019</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="importación-de-datos-1.html#cb55-1" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2019</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="importación-de-datos-1.html#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, gdppc) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="importación-de-datos-1.html#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(gdppc, <span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div>
+</div>
+<div id="p8-identificar" class="section level2 unnumbered hasAnchor">
+<h2>P8 Identificar<a href="importación-de-datos-1.html#p8-identificar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para cada una de las regiones del mundo, determine los valores mínimos y máximos del PIB per cápita el año 2019. Además, identifique los países con los mínimos y máximos del PIB per cápita en cada una de las regiones.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="importación-de-datos-1.html#cb56-1" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span><span class="dv">2019</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="importación-de-datos-1.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, country, gdppc) <span class="sc">%&gt;%</span></span>
+<span id="cb56-3"><a href="importación-de-datos-1.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(gdppc, <span class="at">n =</span> <span class="dv">1</span>)</span>
+<span id="cb56-4"><a href="importación-de-datos-1.html#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="importación-de-datos-1.html#cb56-5" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span><span class="dv">2019</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
+<span id="cb56-6"><a href="importación-de-datos-1.html#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, country, gdppc) <span class="sc">%&gt;%</span></span>
+<span id="cb56-7"><a href="importación-de-datos-1.html#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(gdppc, <span class="at">n =</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div id="p9-estadística-descriptiva" class="section level2 unnumbered hasAnchor">
+<h2>P9 Estadística descriptiva<a href="importación-de-datos-1.html#p9-estadística-descriptiva" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para cada una de las regiones del mundo, presente una tabla con estadística descriptiva del PIB per cápita para el año 2018.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="importación-de-datos-1.html#cb57-1" aria-hidden="true" tabindex="-1"></a>wbData3 <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="importación-de-datos-1.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="importación-de-datos-1.html#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, gdppc) <span class="sc">%&gt;%</span></span>
+<span id="cb57-4"><a href="importación-de-datos-1.html#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
+<span id="cb57-5"><a href="importación-de-datos-1.html#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">skim</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb57-6"><a href="importación-de-datos-1.html#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">yank</span>(<span class="st">&quot;numeric&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb57-7"><a href="importación-de-datos-1.html#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;skim_variable&quot;</span>, <span class="st">&quot;n_missing&quot;</span>, <span class="st">&quot;complete_rate&quot;</span>, <span class="st">&quot;hist&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-8"><a href="importación-de-datos-1.html#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">booktabs =</span> T, <span class="at">digits =</span> <span class="dv">0</span>, <span class="at">linesep =</span><span class="st">&quot;&quot;</span>,</span>
+<span id="cb57-9"><a href="importación-de-datos-1.html#cb57-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Región&quot;</span>, <span class="st">&quot;Media&quot;</span>, <span class="st">&quot;Desv. Est.&quot;</span>, <span class="st">&quot;Min&quot;</span>, <span class="st">&quot;p25&quot;</span>, <span class="st">&quot;p50&quot;</span>, <span class="st">&quot;p75&quot;</span>, <span class="st">&quot;Max&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-10"><a href="importación-de-datos-1.html#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="dv">10</span>, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hold_position&quot;</span>))</span>
+<span id="cb57-11"><a href="importación-de-datos-1.html#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="importación-de-datos-1.html#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(wbData3, <span class="st">&quot;datos/wbData3_final.rds&quot;</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="importación-de-datos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gráficos-estáticos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection",
+"toc_depth": 6,
+"toc_float": null
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
